@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import "./App.css";
+import "./static/App.css";
 import { connect, sendMsg } from "./api";
+import { Button} from "@chakra-ui/react";
 
 class App extends Component {
   constructor(props) {
@@ -16,10 +17,15 @@ class App extends Component {
   render() {
     return (
         <div className="App">
-          <button onClick={this.send}>Hit</button>
+            <Button 
+            colorScheme='blue' 
+            onClick={this.send} 
+            rounded='10px'>Send Message</Button>
         </div>
     );
   }
+
 }
 
 export default App;
+
