@@ -1,8 +1,9 @@
-package calculator 
+package calculator
 
 import (
+	// "fmt"
 	"math"
-	"fmt"
+	"strconv"
 )
 
 type Calculator struct {
@@ -22,8 +23,10 @@ func (c *Calculator) InsertInput(input string) {
 }
 
 
+
 func (c *Calculator) ResetCalculator(){
-	c.input = ""
+	c.nStack = &NumberStack{}
+	c.oStack = &OperatorStack{}
 	c.nStack.Reset()
 	c.oStack.Reset()
 	c.lastIsNum = false
@@ -103,23 +106,21 @@ func (c *Calculator) SetInvalid(msg string){
 }
 
 func (c *Calculator) Calculate() {
+	c.ResetCalculator()
 	// Reading and calculate input
 	for _, char := range c.input{
 		if (IsOperand(char)){
-			if (!c.oStack.IsEmpty() && c.oStack.Top() != rune(')')){
-				digit := int(char)
-				if (c.commaVal > 0){
-					// Case if the digit is for after-comma value
-					c.currentVal += float64(digit)/ math.Pow(10, float64(c.commaVal))
-				} else {
-					// Case if the digit is not for after-comma value
-					c.currentVal += c.currentVal*10 + float64(digit)
-				}
-				c.lastIsNum = true
+			str := string(char)
+			digit,_ := strconv.Atoi(str)
+			if (c.commaVal > 0){
+				// Case if the digit is for after-comma value
+				c.currentVal += float64(digit)/ math.Pow(10, float64(c.commaVal))
+				c.commaVal++
 			} else {
-				c.SetInvalid("Invalid input, number after closing parentheses detected.")
-				break
+				// Case if the digit is not for after-comma value
+				c.currentVal += c.currentVal*10 + float64(digit)
 			}
+			c.lastIsNum = true
 		} else if (IsExtra(char)){
 			if (char == rune('.')){
 				if (c.lastIsNum){
@@ -144,7 +145,7 @@ func (c *Calculator) Calculate() {
 					break
 				} else {
 					c.GetCurrentValToStack()
-					for (c.oStack.Top() != rune(')') && !c.oStack.IsEmpty()) {
+					for (!c.oStack.IsEmpty() && c.oStack.Top() != rune('(')) {
 						int1 := c.nStack.Pop()
 						int2 := c.nStack.Pop()
 						op := c.oStack.Pop()
@@ -153,7 +154,8 @@ func (c *Calculator) Calculate() {
 							c.SetInvalid("Invalid input, division by 0 detected.")
 							break
 						} else {
-							c.nStack.Push(res)
+							// Works as if the all between parentheses is somesort of number
+							c.currentVal = res
 						}
 					}
 					if (c.oStack.IsEmpty()){
@@ -193,29 +195,47 @@ func (c *Calculator) Calculate() {
 				}
 				c.lastIsNum = false
 			} else {
-				c.SetInvalid("Invalid input, operator before operator detected.")
+				c.SetInvalid("Invalid input, non-number before operator detected.")
+				break
 			}
-
+		} else if (char == rune(' ')){
+			continue
 		} else {
 			c.SetInvalid("Invalid input, invalid symbol detected.")
 			break
 		}
+
+		// Only for testing
+		// fmt.Println("curChar: ", string(char))
+		// c.nStack.Display()
+		// c.oStack.Display()
 	}
 
 	// Calculate the rest after the reading input is finished
-	for (!c.oStack.IsEmpty()){
-		int1 := c.nStack.Pop()
-		int2 := c.nStack.Pop()
-		op := c.oStack.Pop()
-		res, valid := Operate(int2, op, int1)
-		if (!valid) {
-			c.SetInvalid("Invalid input, division by 0 detected.")
-			break
+	if (c.valid){
+		// No need to progress further if it is not valid
+		if (!c.lastIsNum){
+			c.SetInvalid("Invalid input, invalid symbol detected.")
 		} else {
-			c.nStack.Push(res)
+			c.GetCurrentValToStack()
+			for (!c.oStack.IsEmpty()){
+				int1 := c.nStack.Pop()
+				int2 := c.nStack.Pop()
+				op := c.oStack.Pop()
+				res, valid := Operate(int2, op, int1)
+				if (!valid) {
+					c.SetInvalid("Invalid input, division by 0 detected.")
+					break
+				} else {
+					c.nStack.Push(res)
+				}
+			}
 		}
+	
+		// Save the result
+		c.solution = c.nStack.Top()
 	}
-	c.solution = c.nStack.Top()
+	
 }
 
 func (c *Calculator) GetInput() string {
