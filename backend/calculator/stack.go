@@ -1,21 +1,25 @@
 package calculator
 
+import (
+	"fmt"
+)
+
 
 type NumberStack struct {
-	buffer[] *float64
+	buffer[] float64
 	nEff int
 }
 
 func (ns *NumberStack) Push(n float64){
-	ns.buffer = append(ns.buffer, &n)
+	ns.buffer = append(ns.buffer, n)
 	ns.nEff++
 }
 
 func (ns *NumberStack) Pop() float64{
-	res := ns.buffer[0]
-	ns.buffer = ns.buffer[1:]
+	res := ns.buffer[ns.nEff-1]
+	ns.buffer = ns.buffer[:ns.nEff-1]
 	ns.nEff--
-	return *res
+	return res
 }
 
 func (ns *NumberStack) IsEmpty() bool {
@@ -23,7 +27,7 @@ func (ns *NumberStack) IsEmpty() bool {
 }
 
 func (ns *NumberStack) Top() float64 {
-	return *ns.buffer[ns.nEff-1]
+	return ns.buffer[ns.nEff-1]
 }
 
 func (ns *NumberStack) Reset() {
@@ -33,15 +37,29 @@ func (ns *NumberStack) Reset() {
 	ns.nEff = 0
 }
 
+func (ns *NumberStack) Display(){
+	for i, n := range ns.buffer {
+		if (i == ns.nEff-1){
+			fmt.Println(n)
+		} else {
+			fmt.Print(n , " ")
+		}
+	}
+}
+
+func (ns *NumberStack) GetNeff() int{
+	return ns.nEff
+}
+
 
 
 type OperatorStack struct {
-	buffer[] *rune
+	buffer[] rune
 	nEff int
 }
 
 func (os *OperatorStack) Push(s rune){
-	os.buffer = append(os.buffer, &s)
+	os.buffer = append(os.buffer, s)
 	os.nEff++
 }
 
@@ -49,7 +67,7 @@ func (os *OperatorStack) Pop() rune {
 	res := os.buffer[os.nEff-1]
 	os.buffer = os.buffer[:os.nEff-1]
 	os.nEff--
-	return *res
+	return res
 }
 
 func (os *OperatorStack) IsEmpty() bool {
@@ -57,7 +75,7 @@ func (os *OperatorStack) IsEmpty() bool {
 }
 
 func (os *OperatorStack) Top() rune {
-	return *os.buffer[os.nEff-1]
+	return os.buffer[os.nEff-1]
 }
 
 func (os *OperatorStack) Reset() {
@@ -65,4 +83,18 @@ func (os *OperatorStack) Reset() {
 		os.Pop()
 	}
 	os.nEff = 0
+}
+
+func (os *OperatorStack) Display(){
+	for i, n := range os.buffer {
+		if (i == os.nEff-1){
+			fmt.Println(string(n))
+		} else {
+			fmt.Print(string(n) , " ")
+		}
+	}
+}
+
+func (os *OperatorStack) GetNeff() int{
+	return os.nEff
 }
