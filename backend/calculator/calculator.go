@@ -16,6 +16,7 @@ type Calculator struct {
 	valid bool
 	solution float64
 	errorMessage string
+	lastIsCP bool //CP = closing parenthesis
 }
 
 func (c *Calculator) InsertInput(input string) {
@@ -35,6 +36,7 @@ func (c *Calculator) ResetCalculator(){
 	c.valid = true
 	c.solution = 0
 	c.errorMessage = ""
+	c.lastIsCP = false
 }
 
 
@@ -110,40 +112,61 @@ func (c *Calculator) Calculate() {
 	// Reading and calculate input
 	for _, char := range c.input{
 		if (IsOperand(char)){
-			str := string(char)
-			digit,_ := strconv.Atoi(str)
-			if (c.commaVal > 0){
-				// Case if the digit is for after-comma value
-				c.currentVal += float64(digit)/ math.Pow(10, float64(c.commaVal))
-				c.commaVal++
+			if (!c.lastIsCP){
+				str := string(char)
+				digit,_ := strconv.Atoi(str)
+				if (c.commaVal > 0){
+					// Case if the digit is for after-comma value
+					c.currentVal += float64(digit)/ math.Pow(10, float64(c.commaVal))
+					c.commaVal++
+				} else {
+					// Case if the digit is not for after-comma value
+					c.currentVal += c.currentVal*10 + float64(digit)
+				}
+				c.lastIsNum = true
+				c.lastIsCP = false
 			} else {
-				// Case if the digit is not for after-comma value
-				c.currentVal += c.currentVal*10 + float64(digit)
+				c.SetInvalid("Invalid input, number after closing parenthesis detected.")
+				break
 			}
-			c.lastIsNum = true
 		} else if (IsExtra(char)){
 			if (char == rune('.')){
 				if (c.lastIsNum){
 					c.commaVal = 1
 					c.lastIsNum = false
+					c.lastIsCP = false
 				} else {
 					c.SetInvalid("Invalid input, non-number before comma detected.")
 					break
 				}
 			} else if (char == rune('(')){
 				if (c.lastIsNum){
-					c.SetInvalid("Invalid input, number before opening parentheses detected.")
-					break
+					if (c.lastIsCP){
+						c.SetInvalid("Invalid input, closing parenthesis right before opening parenthesis detected.")
+						break
+					} else {
+						c.SetInvalid("Invalid input, number before opening parenthesis detected.")
+						break
+					}
 				} else {
 					c.commaVal = 0
 					c.oStack.Push(char)
 					c.lastIsNum = false
+					c.lastIsCP = false
 				}
 			} else if (char == rune(')')){
 				if (!c.lastIsNum){
-					c.SetInvalid("Invalid input, operator before closing parentheses detected.")
-					break
+					// () is still allowable
+					if !c.oStack.IsEmpty() && c.oStack.Top() == rune('('){
+						c.SetInvalid("Invalid input, empty parenthesis detected.")
+						break
+					}  else {
+						c.SetInvalid("Invalid input, operator before closing parenthesis detected.")
+						break
+					}
 				} else {
+					// Case handling for cases like (5), (((7.568)))
+					// If there is operation between "(" and ")", then these steps will be skipped
 					c.GetCurrentValToStack()
 					for (!c.oStack.IsEmpty() && c.oStack.Top() != rune('(')) {
 						int1 := c.nStack.Pop()
@@ -154,19 +177,21 @@ func (c *Calculator) Calculate() {
 							c.SetInvalid("Invalid input, division by 0 detected.")
 							break
 						} else {
-							// Works as if the all between parentheses is somesort of number
-							c.currentVal = res
+							// Works as if the all between parenthesis is somesort of number
+							c.nStack.Push(res)
 						}
 					}
 					if (c.oStack.IsEmpty()){
-						c.SetInvalid("Invalid input, invalid parentheses detected.")
+						c.SetInvalid("Invalid input, extra closing parenthesis detected.")
 						break
 					} else {
 						c.oStack.Pop()
+						c.currentVal = c.nStack.Pop()
 					}
 
 					// Ini memang sengaja dibikin tetap c.lastIsNum = true
 					// c.lastIsNum = false
+					c.lastIsCP = true
 				}
 			}
 		} else if (IsOperator((char))){
@@ -194,6 +219,7 @@ func (c *Calculator) Calculate() {
 					}
 				}
 				c.lastIsNum = false
+				c.lastIsCP = false
 			} else {
 				c.SetInvalid("Invalid input, non-number before operator detected.")
 				break
@@ -215,25 +241,32 @@ func (c *Calculator) Calculate() {
 	if (c.valid){
 		// No need to progress further if it is not valid
 		if (!c.lastIsNum){
-			c.SetInvalid("Invalid input, invalid symbol detected.")
+			c.SetInvalid("Invalid input, equation is ended by operator detected.")
 		} else {
 			c.GetCurrentValToStack()
 			for (!c.oStack.IsEmpty()){
-				int1 := c.nStack.Pop()
-				int2 := c.nStack.Pop()
-				op := c.oStack.Pop()
-				res, valid := Operate(int2, op, int1)
-				if (!valid) {
-					c.SetInvalid("Invalid input, division by 0 detected.")
-					break
+				if (c.nStack.nEff >= 2){
+					int1 := c.nStack.Pop()
+					int2 := c.nStack.Pop()
+					op := c.oStack.Pop()
+					res, valid := Operate(int2, op, int1)
+					if (!valid) {
+						c.SetInvalid("Invalid input, division by 0 detected.")
+						break
+					} else {
+						c.nStack.Push(res)
+					}
 				} else {
-					c.nStack.Push(res)
+					c.SetInvalid("Invalid input, extra opening parenthesis detected.")
+					break
 				}
 			}
 		}
 	
-		// Save the result
-		c.solution = c.nStack.Top()
+		// Save the result if still valid
+		if (c.valid){
+			c.solution = c.nStack.Top()
+		}
 	}
 	
 }
