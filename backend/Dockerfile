@@ -1,7 +1,7 @@
-FROM golang:1.16.3-alpine3.13
-RUN mkdir /app
-COPY .. /app/
+FROM golang:1.20.0
 WORKDIR /app
+
+RUN go install github.com/cosmtrek/air@latest
+
+COPY . .
 RUN go mod tidy
-RUN go build -o main ./...
-CMD ["/app/main"]
