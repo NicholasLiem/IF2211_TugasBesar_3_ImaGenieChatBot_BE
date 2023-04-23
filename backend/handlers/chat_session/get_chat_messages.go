@@ -1,4 +1,4 @@
-package handlers
+package chat_session
 
 import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/database"

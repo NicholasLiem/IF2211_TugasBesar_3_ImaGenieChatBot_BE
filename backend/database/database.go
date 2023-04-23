@@ -39,6 +39,7 @@ func ConnectDb() {
 	log.Println("running migrations")
 	db.AutoMigrate(&models.ChatSession{})
 	db.AutoMigrate(&models.Message{})
+	db.AutoMigrate(&models.QuestionAnswer{})
 
 	DB = Dbinstance{
 		Db: db,
