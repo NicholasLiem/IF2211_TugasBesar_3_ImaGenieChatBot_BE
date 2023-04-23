@@ -1,14 +1,14 @@
 package models
 
 import (
-	"gorm.io/gorm"
+	"github.com/google/uuid"
+	"time"
 )
 
 type Message struct {
-	gorm.Model
-	MessageID string  `json:"message_id" gorm:"type:text; not null;default:null"`
-	Session   Session `json:"session"`
-	UserID    uint    `json:"user_id"`
-	Content   string  `json:"content"`
-	TimeFrame string  `json:"time_frame"`
+	ID        uint      `gorm:"primaryKey;autoIncrement;" json:"id"`
+	SessionID uuid.UUID `gorm:"type:uuid;index;" json:"sessionId"`
+	Sender    string    `json:"sender"`
+	Text      string    `json:"text"`
+	CreatedAt time.Time `json:"createdAt"`
 }

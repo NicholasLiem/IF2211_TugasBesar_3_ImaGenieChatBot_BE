@@ -1,11 +1,12 @@
 package models
 
 import (
-	"gorm.io/gorm"
+	"github.com/google/uuid"
+	"time"
 )
 
-type Session struct {
-	gorm.Model
-	SessionId string `json:"session_id" gorm:"type:text; not null;default:null"`
-	Title     string `json:"title" gorm:"text;not null;default:null"`
+type ChatSession struct {
+	ID        uuid.UUID `gorm:"type:uuid;default:gen_random_uuid();primaryKey;" json:"id"`
+	Messages  []Message `gorm:"foreignKey:SessionID;constraint:OnDelete:CASCADE;" json:"messages"`
+	CreatedAt time.Time `json:"createdAt"`
 }
