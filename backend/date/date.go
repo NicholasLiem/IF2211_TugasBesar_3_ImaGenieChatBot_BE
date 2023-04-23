@@ -20,7 +20,7 @@ var ErrorMessageList = []string {
 	"Invalid date",
 }
 
-var DayList = []string {"Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"}
+var DayList = []string {"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
 var DaysInMonthsList = []int {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
 
 
@@ -68,7 +68,7 @@ func IsValidDate( d int, m int, y int) (bool, int) {
 		return false, INVALID_DATE_ERR
 	} else {
 		if (m == 2){
-			if IsKabisatYear(y){
+			if IsLeapYear(y){
 				if (d > 29){
 					return false, INVALID_DATE_ERR
 				}
@@ -88,7 +88,7 @@ func IsValidDate( d int, m int, y int) (bool, int) {
 	}
 }
 
-func IsKabisatYear(y int) bool {
+func IsLeapYear(y int) bool {
 	if y % 4 != 0 {
 		return false
 	} else {
@@ -97,7 +97,7 @@ func IsKabisatYear(y int) bool {
 		} else if y % 100 == 0{
 			return false
 		} else {
-			return false
+			return true
 		}
 	}
 }
@@ -117,23 +117,48 @@ func (date *Date) GetDayFromDate(s string) {
 		var days int = 365 * (date.y-1)
 		days += AmountOfLeapYearSoFar(date.y)
 
+
 		// Get amount of days so far from month
-		
+		for i := 1; i < date.m; i++{
+			days += DaysInMonthsList[i]
+		}
+
+		if (IsLeapYear(date.y) && date.m > 2) { days++ }
+
+
+		// Get amount of days so far from date
+		days += date.d
+
+		// Get the specific day
+		// Some references said adjustment is needed because 1 January 0001 is Saturday
+		// ADJUSTMENT := 5
+		var res int = (days ) % 7 
+		date.dayResult = DayList[res]
 
 	}
-
 }
 
 func (date *Date) DisplayDate() {
-	fmt.Println("========")
-	fmt.Println("Input: ", date.input)
-	fmt.Println("Date: ", date.d)
-	fmt.Println("Month: ", date.m)
-	fmt.Println("Year: ", date.y)
-	fmt.Println("Valid Status: ", date.valid)
-	fmt.Println("Result: ", date.dayResult)
-	fmt.Println("Error Message: ", date.errorMessage)
-	fmt.Println("========")
+	if (date.valid){
+		fmt.Println("========")
+		fmt.Println("Input: ", date.input)
+		fmt.Println("Date: ", date.d)
+		fmt.Println("Month: ", date.m)
+		fmt.Println("Year: ", date.y)
+		fmt.Println("Valid Status: ", date.valid)
+		fmt.Println("Result: ", date.dayResult)
+		fmt.Println("Error Code: ", date.errorCode)
+		fmt.Println("Error Message: ", date.errorMessage)
+		fmt.Println("========")
+	} else {
+		fmt.Println("========")
+		fmt.Println("Input: ", date.input)
+		fmt.Println("Valid Status: ", date.valid)
+		fmt.Println("Error Code: ", date.errorCode)
+		fmt.Println("Error Message: ", date.errorMessage)
+		fmt.Println("========")
+		
+	}
 }
 
 func (date *Date) ResetDate() {
@@ -149,10 +174,14 @@ func (date *Date) ResetDate() {
 
 func AmountOfLeapYearSoFar(y int) int {
 	count := 0
-	for i := 0; i < y; i++ {
-		if (IsKabisatYear(i)){
+	for i := 1; i < y; i++ {
+		if (IsLeapYear(i)){
 			count++
 		}
 	}		
 	return count
+}
+
+func (date *Date) GetResult() string {
+	return date.dayResult
 }
