@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"github.com/NicholasLiem/Tubes3_Testing/calculator"
+	"github.com/NicholasLiem/Tubes3_ImagineKelar/calculator"
 )
 
-func main () {
+func main() {
 	c := &calculator.Calculator{}
 
-	strArr := [22] string {
+	strArr := [22]string{
 		"6+3-5*7",
 		"(8*4)/(4-2)",
-		"(/3+4)", 
+		"(/3+4)",
 		"(9*3)^(1/3)*2",
 		"(4+7+.",
 		"((9+7)))",
@@ -19,7 +19,7 @@ func main () {
 		"9.73432-2.345*2",
 		"6+7/0",
 		"6..4+3",
-		"   5+6  *9",   // Ignoring whitespace test
+		"   5+6  *9", // Ignoring whitespace test
 		"(4+5)2",
 		"(((6.3)))",
 		"6(45+4)",
@@ -31,20 +31,18 @@ func main () {
 		"0.000",
 		" 7+ 4 / 5*",
 		"+4-5*4",
-		}
+	}
 
-	for _,e := range strArr {
+	for _, e := range strArr {
 		c.InsertInput(e)
 		fmt.Println("Input: ", c.GetInput())
 		c.Calculate()
-		if(c.IsValid()){
+		if c.IsValid() {
 			fmt.Println("Solution: ", c.GetSolution())
 		} else {
 			fmt.Println(c.GetErrorMessage())
 		}
 	}
-
-
 
 	// ns := &calculator.NumberStack{}
 	// ns.Push(5)
