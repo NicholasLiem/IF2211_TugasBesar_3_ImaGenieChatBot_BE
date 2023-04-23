@@ -14,5 +14,6 @@ func setupRoutes(app *fiber.App) {
 	app.Post("/r/:session_id", chat_session.DeleteChatSession)
 	app.Post("/create", question_answer.CreateQuestionAnswer)
 	app.Post("/remove", question_answer.DeleteQuestionAnswer)
+	app.Post("/a/:session_id", chat_session.InsertMessageToChatSession)
 	app.Get("/questions", question_answer.GetQuestionAnswers)
 }
