@@ -17,8 +17,7 @@ func setupRoutes(app *fiber.App) {
 	app.Get("/chat-sessions/:session_id/messages", messages.GetChatMessages)
 
 	// Question answers
-	app.Post("/question-answers", question_answer.CreateQuestionAnswer)
-	app.Delete("/question-answers", question_answer.DeleteQuestionAnswer)
+	app.Post("/question-answers", question_answer.QuestionAnswerHandler)
 	app.Get("/question-answers", question_answer.GetQuestionAnswers)
 
 	// Get all chat session IDs

@@ -9,73 +9,65 @@ import (
 	"strings"
 )
 
-func AddOrUpdateQuestionAnswer(query string) error {
-	r := regexp.MustCompile(`^(Tambahkan|Add|Ubah|Update) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
+const (
+	SuccessAdd    = 1
+	SuccessUpdate = 2
+	SuccessDelete = 3
+)
+
+func QuestionAnswerClassifier(query string) (int, error) {
+	r := regexp.MustCompile(`^(Tambahkan|Add|Ubah|Update|Hapus|Delete) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
 	match := r.FindStringSubmatch(strings.TrimSpace(query))
 
-	if len(match) < 1 {
-		return errors.New("invalid query")
-	}
+	if len(match) > 0 {
+		question := strings.TrimSpace(match[2])
+		answer := strings.TrimSpace(match[3])
 
-	question := strings.TrimSpace(match[2])
-	answer := strings.TrimSpace(match[3])
-
-	existingQuestionAnswer := models.QuestionAnswer{}
-	if question != "" {
-		if err := database.DB.Db.Where("question = ?", question).First(&existingQuestionAnswer).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
-			return err
-		}
-	}
-
-	switch strings.TrimSpace(match[1]) {
-	case "Tambahkan", "Add":
-		if question == "" || answer == "" {
-			return errors.New("question and answer fields are required")
-		}
-		if existingQuestionAnswer.ID != 0 {
-			existingQuestionAnswer.Answer = answer
-			if err := database.DB.Db.Save(&existingQuestionAnswer).Error; err != nil {
-				return err
+		existingQuestionAnswer := models.QuestionAnswer{}
+		if question != "" {
+			if err := database.DB.Db.Where("question = ?", question).First(&existingQuestionAnswer).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
+				return 0, err
 			}
-		} else {
+		}
+
+		if strings.TrimSpace(match[1]) == "Tambahkan" || strings.TrimSpace(match[1]) == "Add" {
 			newQuestionAnswer := models.QuestionAnswer{
 				Question: question,
 				Answer:   answer,
 			}
-			if err := database.DB.Db.Create(&newQuestionAnswer).Error; err != nil {
-				return err
+			if newQuestionAnswer.Question == "" || newQuestionAnswer.Answer == "" {
+				return 0, errors.New("question and answer fields are required")
 			}
+			if existingQuestionAnswer.ID != 0 {
+				existingQuestionAnswer.Answer = newQuestionAnswer.Answer
+				if err := database.DB.Db.Save(&existingQuestionAnswer).Error; err != nil {
+					return 0, err
+				}
+				return SuccessUpdate, nil
+			} else {
+				if err := database.DB.Db.Create(&newQuestionAnswer).Error; err != nil {
+					return 0, err
+				}
+				return SuccessAdd, nil
+			}
+		} else if strings.TrimSpace(match[1]) == "Ubah" || strings.TrimSpace(match[1]) == "Update" {
+			if existingQuestionAnswer.ID == 0 {
+				return 0, errors.New("question not found")
+			}
+			existingQuestionAnswer.Answer = answer
+			if err := database.DB.Db.Save(&existingQuestionAnswer).Error; err != nil {
+				return 0, err
+			}
+			return SuccessUpdate, nil
+		} else if strings.TrimSpace(match[1]) == "Hapus" || strings.TrimSpace(match[1]) == "Delete" {
+			if existingQuestionAnswer.ID == 0 {
+				return 0, errors.New("question not found")
+			}
+			if err := database.DB.Db.Delete(&existingQuestionAnswer).Error; err != nil {
+				return 0, err
+			}
+			return SuccessDelete, nil
 		}
-	case "Ubah", "Update":
-		if existingQuestionAnswer.ID == 0 {
-			return errors.New("question not found")
-		}
-		existingQuestionAnswer.Answer = answer
-		if err := database.DB.Db.Save(&existingQuestionAnswer).Error; err != nil {
-			return err
-		}
-	default:
-		return errors.New("invalid query")
 	}
-
-	return nil
-}
-
-func DeleteQuestionAnswer(query string) error {
-	r := regexp.MustCompile(`^(Hapus|Remove) pertanyaan (?P<question>.+)$`)
-	match := r.FindStringSubmatch(strings.TrimSpace(query))
-
-	if len(match) > 0 {
-		if strings.TrimSpace(match[1]) == "Hapus" || strings.TrimSpace(match[1]) == "Remove" {
-			question := strings.TrimSpace(match[2])
-			if question == "" {
-				return errors.New("question field is required")
-			}
-			if err := database.DB.Db.Where("question = ?", question).Delete(&models.QuestionAnswer{}).Error; err != nil {
-				return err
-			}
-			return nil
-		}
-	}
-	return errors.New("invalid query")
+	return 0, errors.New("invalid query")
 }
