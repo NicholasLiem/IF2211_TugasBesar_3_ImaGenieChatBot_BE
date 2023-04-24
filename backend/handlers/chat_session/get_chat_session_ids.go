@@ -24,3 +24,16 @@ func GetChatSessionIDs(c *fiber.Ctx) error {
 
 	return c.JSON(response)
 }
+
+func GetChatSessions(c *fiber.Ctx) error{
+	var chatSessions []models.ChatSession
+	err := database.DB.Db.Find(&chatSessions).Error
+	if err != nil{
+		return fiber.NewError(fiber.StatusInternalServerError,"Failed to retrieve chat sessions")
+	}
+	if len(chatSessions) == 0 {
+		return fiber.NewError(fiber.StatusNotFound,"No chat sessions found in the database")
+	}
+
+	return c.Status(fiber.StatusOK).JSON(chatSessions)
+}
