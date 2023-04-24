@@ -3,21 +3,25 @@ package main
 import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/chat_session"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/messages"
-	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/pages"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/question_answer"
 	"github.com/gofiber/fiber/v2"
 )
 
 func setupRoutes(app *fiber.App) {
-	app.Get("/chat/", pages.ChatPage)
+	// Chat sessions
+	app.Post("/chat-sessions", chat_session.CreateChatSession)
+	app.Delete("/chat-sessions/:session_id", chat_session.DeleteChatSession)
 
-	app.Post("/a/:session_id", messages.InsertMessageToChatSession)
+	// Chat messages
+	app.Post("/chat-sessions/:session_id/messages", messages.InsertMessageToChatSession)
+	app.Get("/chat-sessions/:session_id/messages", messages.GetChatMessages)
 
-	app.Get("/h/:session_id", chat_session.GetChatMessages)
-	app.Post("/c/:session_id", chat_session.CreateChatSession)
-	app.Post("/r/:session_id", chat_session.DeleteChatSession)
+	// Question answers
+	app.Post("/question-answers", question_answer.CreateQuestionAnswer)
+	app.Delete("/question-answers/:id", question_answer.DeleteQuestionAnswer)
+	app.Get("/question-answers", question_answer.GetQuestionAnswers)
 
-	app.Post("/create", question_answer.CreateQuestionAnswer)
-	app.Post("/remove", question_answer.DeleteQuestionAnswer)
-	app.Get("/questions", question_answer.GetQuestionAnswers)
+	// Get all chat session IDs
+	app.Get("/chat-sessions", chat_session.GetChatSessionIDs)
+
 }

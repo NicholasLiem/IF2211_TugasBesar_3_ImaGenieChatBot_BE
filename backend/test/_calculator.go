@@ -3,11 +3,10 @@ package main
 import (
 	// "fmt"
 	// "github.com/NicholasLiem/Tubes3_ImagineKelar/calculator"
-	"github.com/NicholasLiem/Tubes3_ImagineKelar/date"
-
+	"github.com/NicholasLiem/Tubes3_ImagineKelar/algorithms/date"
 )
 
-func main () {
+func main() {
 
 	// Calculator Testing
 	// c := &calculator.Calculator{}
@@ -15,7 +14,7 @@ func main () {
 	// strArr := [] string {
 	// 	"6+3-5*7",
 	// 	"(8*4)/(4-2)",
-	// 	"(/3+4)", 
+	// 	"(/3+4)",
 	// 	"(9*3)^(1/3)*2",
 	// 	"(4+7+.",
 	// 	"((9+7)))",
@@ -50,7 +49,7 @@ func main () {
 
 	d := &date.Date{}
 
-	strArr := [] string {
+	strArr := []string{
 		"09/10/2003",
 		"01/10/2003",
 		"07/03/2003",
