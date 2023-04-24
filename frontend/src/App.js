@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import "./static/App.css";
 import { connect, sendMsg } from "./api";
-import { Button} from "@chakra-ui/react";
+import {Container } from "@chakra-ui/react";
+import Siderbar from "./components/Siderbar";
 
 class App extends Component {
   constructor(props) {
@@ -16,16 +17,22 @@ class App extends Component {
 
   render() {
     return (
-        <div className="App">
-            <Button 
-            colorScheme='blue' 
-            onClick={this.send} 
-            rounded='10px'>Send Message</Button>
-        </div>
+      <div className="App">
+        <Container
+          bgColor={"rgb(52 53 65)"}
+          maxW={"100vw"}
+          overflowX={"hidden"}
+          minH={"100vh"}
+          display={"flex"}
+          flexDirection={"row"}
+          p={0}
+          m={0}
+        >
+          <Siderbar />
+        </Container>
+      </div>
     );
   }
-
 }
 
 export default App;
-
