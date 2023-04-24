@@ -3,6 +3,7 @@ import "./static/App.css";
 import { connect, sendMsg } from "./api";
 import {Container } from "@chakra-ui/react";
 import Siderbar from "./components/Siderbar";
+import ChatBox from "./components/ChatBox";
 
 class App extends Component {
   constructor(props) {
@@ -29,6 +30,7 @@ class App extends Component {
           m={0}
         >
           <Siderbar />
+          <ChatBox />
         </Container>
       </div>
     );
