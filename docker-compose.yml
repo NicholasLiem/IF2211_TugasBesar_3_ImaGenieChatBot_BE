@@ -1,15 +1,27 @@
 version: '3.9'
 
 services:
-  web:
-    build: .
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:5000
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./backend
     env_file:
       - .env
     ports:
-      - "3000:3000" # port container: port local
+      - "5000:5000" # port container: port local
     volumes:
       - type: bind
-        source: .
+        source: ./backend
         target: /app
       - type: volume
         source: go-modules
@@ -17,6 +29,10 @@ services:
     command: air -c .air.toml
     environment:
       - CGO_ENABLED=0
+      - DB_USER=${DB_USER}
+    depends_on:
+      - db
+
   db:
     image: postgres:alpine
     environment:
