@@ -1,4 +1,4 @@
-package levenshtein
+package test
 
 import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/algorithms/utils"
