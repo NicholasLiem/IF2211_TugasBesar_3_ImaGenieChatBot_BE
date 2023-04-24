@@ -1,30 +1,24 @@
 package question_answer
 
 import (
-	"github.com/NicholasLiem/Tubes3_ImagineKelar/database"
+	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/user_query"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/models"
 	"github.com/gofiber/fiber/v2"
 )
 
 func CreateQuestionAnswer(c *fiber.Ctx) error {
-	var newQuestionAnswer models.QuestionAnswer
-	if err := c.BodyParser(&newQuestionAnswer); err != nil {
+	var message models.Message
+	if err := c.BodyParser(&message); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
 	}
 
-	if newQuestionAnswer.Question == "" || newQuestionAnswer.Answer == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "Question and answer fields are required")
+	if message.Text == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "Text field is required")
 	}
 
-	if err := database.DB.Db.Create(&newQuestionAnswer).Error; err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to create question answer")
+	if err := user_query.AddOrUpdateQuestionAnswer(message.Text); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	response := map[string]interface{}{
-		"qid":      newQuestionAnswer.ID,
-		"question": newQuestionAnswer.Question,
-		"answer":   newQuestionAnswer.Answer,
-	}
-
-	return c.Status(fiber.StatusCreated).JSON(response)
+	return c.SendString("Question answer berhasil ditambahkan")
 }

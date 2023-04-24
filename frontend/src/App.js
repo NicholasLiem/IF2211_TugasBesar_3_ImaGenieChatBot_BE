@@ -12,9 +12,9 @@ class App extends Component {
         <Container
           bgColor={"rgb(52 53 65)"}
           maxW={"100vw"}
-          overflowX={"hidden"}
           minH={"100vh"}
           display={"flex"}
+          overflowY={"hidden"}
           flexDirection={"row"}
           p={0}
           m={0}

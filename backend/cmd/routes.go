@@ -22,7 +22,7 @@ func setupRoutes(app *fiber.App) {
 
 	// Question answers
 	app.Post("/question-answers", question_answer.CreateQuestionAnswer)
-	app.Delete("/question-answers/:id", question_answer.DeleteQuestionAnswer)
+	app.Delete("/question-answers", question_answer.DeleteQuestionAnswer)
 	app.Get("/question-answers", question_answer.GetQuestionAnswers)
 
 	// Get all chat session IDs
