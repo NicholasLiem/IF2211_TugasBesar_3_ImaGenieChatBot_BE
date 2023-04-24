@@ -7,6 +7,14 @@ func Levenshtein_distance(stringOne, stringTwo string) int {
 	lengthStringOne := len(stringOne)
 	lengthStringTwo := len(stringTwo)
 
+	if lengthStringOne == 0 {
+		return lengthStringTwo
+	}
+
+	if lengthStringTwo == 0 {
+		return lengthStringOne
+	}
+
 	distanceMatrix := make([][]int, lengthStringOne+1)
 	for i := 0; i <= lengthStringOne; i++ {
 		distanceMatrix[i] = make([]int, lengthStringTwo+1)
@@ -34,7 +42,24 @@ func Levenshtein_distance(stringOne, stringTwo string) int {
 }
 
 func Similarity(textOne, textTwo string) float64 {
+	if textOne == "" && textTwo == "" {
+		return 100
+	}
+
 	distance := Levenshtein_distance(textOne, textTwo)
-	maxLength := math.Max(float64(len(textOne)), float64(len(textTwo)))
-	return (1 - float64(distance)/maxLength) * 100
+
+	if distance == 0 {
+		return 100
+	}
+
+	maxLength := max(len(textOne), len(textTwo))
+	return (1 - float64(distance)/float64(maxLength)) * 100
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	} else {
+		return y
+	}
 }
