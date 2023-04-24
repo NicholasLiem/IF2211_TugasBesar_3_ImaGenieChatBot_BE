@@ -1,7 +1,8 @@
 import React from "react";
 import { Container, Input, calc } from "@chakra-ui/react";
-
+import { useEffect } from "react";
 const ChatBox = () => {
+
   return (
     <Container
       m={0}

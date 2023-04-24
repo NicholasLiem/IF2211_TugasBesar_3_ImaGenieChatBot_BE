@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Container, Icon, Text } from "@chakra-ui/react";
 import { IoIosAdd } from "react-icons/io";
 import Session from "./Session";
@@ -14,6 +14,14 @@ const data = [
   "Coba tes kalimat nya",
 ];
 const Siderbar = () => {
+  useEffect(() =>{
+    const getSessions = async () =>{
+      const response = await fetch("http://localhost:3000/chat-sessions")
+      const data = await response.json()
+      console.log(data)
+    }
+    getSessions()
+  },[])
   const style = { color: "white", fontSize: "24px" };
   return (
     <Container
