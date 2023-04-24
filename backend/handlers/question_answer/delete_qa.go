@@ -1,25 +1,24 @@
 package question_answer
 
 import (
-	"github.com/NicholasLiem/Tubes3_ImagineKelar/database"
+	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/user_query"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/models"
 	"github.com/gofiber/fiber/v2"
 )
 
 func DeleteQuestionAnswer(c *fiber.Ctx) error {
-	var question models.QuestionAnswer
-	if err := c.BodyParser(&question); err != nil {
+	var message models.Message
+	if err := c.BodyParser(&message); err != nil {
 		return fiber.NewError(fiber.StatusBadRequest, "Invalid request body")
 	}
 
-	if question.Question == "" {
-		return fiber.NewError(fiber.StatusBadRequest, "Question field is required")
+	if message.Text == "" {
+		return fiber.NewError(fiber.StatusBadRequest, "Query can't be empty")
 	}
 
-	err := database.DB.Db.Where("question = ?", question.Question).Delete(&models.QuestionAnswer{}).Error
-	if err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to delete question answer")
+	if err := user_query.DeleteQuestionAnswer(message.Text); err != nil {
+		return fiber.NewError(fiber.StatusBadRequest, err.Error())
 	}
 
-	return c.SendString("Question and answer deleted successfully")
+	return c.SendString("Question answer berhasil dihapus")
 }
