@@ -16,7 +16,7 @@ const (
 )
 
 func QuestionAnswerClassifier(query string) (int, error) {
-	r := regexp.MustCompile(`^(Tambahkan|Add|Ubah|Update|Hapus|Delete) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
+	r := regexp.MustCompile(`^(tambahkan|add|ubah|update|hapus|delete) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
 	match := r.FindStringSubmatch(strings.TrimSpace(query))
 
 	if len(match) > 0 {
@@ -30,7 +30,7 @@ func QuestionAnswerClassifier(query string) (int, error) {
 			}
 		}
 
-		if strings.TrimSpace(match[1]) == "Tambahkan" || strings.TrimSpace(match[1]) == "Add" {
+		if strings.TrimSpace(match[1]) == "tambahkan" || strings.TrimSpace(match[1]) == "add" {
 			newQuestionAnswer := models.QuestionAnswer{
 				Question: question,
 				Answer:   answer,
@@ -50,7 +50,7 @@ func QuestionAnswerClassifier(query string) (int, error) {
 				}
 				return SuccessAdd, nil
 			}
-		} else if strings.TrimSpace(match[1]) == "Ubah" || strings.TrimSpace(match[1]) == "Update" {
+		} else if strings.TrimSpace(match[1]) == "ubah" || strings.TrimSpace(match[1]) == "update" {
 			if existingQuestionAnswer.ID == 0 {
 				return 0, errors.New("question not found")
 			}
@@ -59,7 +59,7 @@ func QuestionAnswerClassifier(query string) (int, error) {
 				return 0, err
 			}
 			return SuccessUpdate, nil
-		} else if strings.TrimSpace(match[1]) == "Hapus" || strings.TrimSpace(match[1]) == "Delete" {
+		} else if strings.TrimSpace(match[1]) == "hapus" || strings.TrimSpace(match[1]) == "delete" {
 			if existingQuestionAnswer.ID == 0 {
 				return 0, errors.New("question not found")
 			}

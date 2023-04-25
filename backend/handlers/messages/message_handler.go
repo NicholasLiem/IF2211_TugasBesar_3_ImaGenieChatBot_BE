@@ -8,6 +8,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"regexp"
+	"strings"
 )
 
 func MessageHandler(c *fiber.Ctx) error {
@@ -53,6 +54,7 @@ func MessageHandler(c *fiber.Ctx) error {
 	}
 
 	// Handle QA queries
+	message.Text = strings.ToLower(message.Text)
 	if isQAQuery(message.Text) {
 		result, err := user_query.QuestionAnswerClassifier(message.Text)
 		if err != nil {
@@ -88,6 +90,6 @@ func MessageHandler(c *fiber.Ctx) error {
 }
 
 func isQAQuery(text string) bool {
-	r := regexp.MustCompile(`^(Tambahkan|Add|Ubah|Update|Hapus|Delete) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
+	r := regexp.MustCompile(`^(tambahkan|add|ubah|update|hapus|delete) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
 	return r.MatchString(text)
 }
