@@ -4,9 +4,10 @@ import (
 	// "fmt"
 	// "github.com/NicholasLiem/Tubes3_ImagineKelar/calculator"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/algorithms/date"
+	"testing"
 )
 
-func main() {
+func TestCalculator(t *testing.T) {
 
 	// Calculator Testing
 	// c := &calculator.Calculator{}

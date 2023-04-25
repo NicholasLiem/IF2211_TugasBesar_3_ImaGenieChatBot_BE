@@ -1,7 +1,6 @@
 package date
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -28,7 +27,7 @@ type Date struct {
 	d            int
 	m            int
 	y            int
-	valid        bool
+	Valid        bool
 	dayResult    string
 	errorCode    int
 	errorMessage string
@@ -107,11 +106,11 @@ func (date *Date) GetDayFromDate(s string) {
 
 	// Validate Input
 	date.input = s
-	date.valid, date.d, date.m, date.y, date.errorCode = StringToDate(s)
+	date.Valid, date.d, date.m, date.y, date.errorCode = StringToDate(s)
 	date.errorMessage = ErrorMessageList[date.errorCode]
 
 	// Progress further if Input is valid
-	if date.valid {
+	if date.Valid {
 		// Get amount of days so far from year
 		var days int = 365 * (date.y - 1)
 		days += AmountOfLeapYearSoFar(date.y)
@@ -137,27 +136,28 @@ func (date *Date) GetDayFromDate(s string) {
 	}
 }
 
-func (date *Date) DisplayDate() {
-	if date.valid {
-		fmt.Println("========")
-		fmt.Println("Input: ", date.input)
-		fmt.Println("Date: ", date.d)
-		fmt.Println("Month: ", date.m)
-		fmt.Println("Year: ", date.y)
-		fmt.Println("Valid Status: ", date.valid)
-		fmt.Println("Result: ", date.dayResult)
-		fmt.Println("Error Code: ", date.errorCode)
-		fmt.Println("Error Message: ", date.errorMessage)
-		fmt.Println("========")
-	} else {
-		fmt.Println("========")
-		fmt.Println("Input: ", date.input)
-		fmt.Println("Valid Status: ", date.valid)
-		fmt.Println("Error Code: ", date.errorCode)
-		fmt.Println("Error Message: ", date.errorMessage)
-		fmt.Println("========")
-
-	}
+func (date *Date) GetDateResult() string {
+	return date.dayResult
+	//if date.valid {
+	//	fmt.Println("========")
+	//	fmt.Println("Input: ", date.input)
+	//	fmt.Println("Date: ", date.d)
+	//	fmt.Println("Month: ", date.m)
+	//	fmt.Println("Year: ", date.y)
+	//	fmt.Println("Valid Status: ", date.valid)
+	//	fmt.Println("Result: ", date.dayResult)
+	//	fmt.Println("Error Code: ", date.errorCode)
+	//	fmt.Println("Error Message: ", date.errorMessage)
+	//	fmt.Println("========")
+	//} else {
+	//	fmt.Println("========")
+	//	fmt.Println("Input: ", date.input)
+	//	fmt.Println("Valid Status: ", date.valid)
+	//	fmt.Println("Error Code: ", date.errorCode)
+	//	fmt.Println("Error Message: ", date.errorMessage)
+	//	fmt.Println("========")
+	//
+	//}
 }
 
 func (date *Date) ResetDate() {
@@ -166,7 +166,7 @@ func (date *Date) ResetDate() {
 	date.m = 0
 	date.y = 0
 	date.dayResult = ""
-	date.valid = true
+	date.Valid = true
 	date.errorCode = 0
 	date.errorMessage = ""
 }
