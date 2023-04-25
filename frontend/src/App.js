@@ -1,14 +1,19 @@
 import React, { Component } from "react";
 import "./static/App.css";
-import {Container } from "@chakra-ui/react";
+import {Container, Box , Button} from "@chakra-ui/react";
 import Siderbar from "./components/Siderbar";
 import ChatBox from "./components/ChatBox";
+import SplashScreen from "./components/SplashScreen";
+import HelpPage from "./components/Help";
+
 
 
 class App extends Component {
   render() {
     return (
       <div className="App">
+        <SplashScreen/>
+        <HelpPage/>
         <Container
           bgColor={"rgb(52 53 65)"}
           maxW={"100vw"}
