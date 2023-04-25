@@ -1,19 +1,22 @@
 package utils;
 
-import (
-	"fmt"
-)
+
 
 func KnuthMorrisPrattMatch(text string, pattern string) int {
 
 	var n int = len(text);
 	var m int = len(pattern);
 
-	if ( m <= n){
-		b := computeBorder(pattern);
 
-		fmt.Println(text, "===", pattern)
-		fmt.Println(b)
+
+	if ( m <= n){
+
+		if (m == 0){
+			// Both strings are empty
+			return 0;
+		}
+
+		b := computeBorder(pattern);
 	
 		var i int = 0;
 		var j int = 0;
@@ -31,10 +34,11 @@ func KnuthMorrisPrattMatch(text string, pattern string) int {
 				i++;
 			}
 		}
-
 		return -1; 
+
+	} else {
+		return -1; // no match
 	}
-	return -1; // no match
 }
 
 func computeBorder(pattern string) []int {
@@ -82,18 +86,3 @@ func isStringMatch(s1 string, s2 string) bool {
 	}
 }
 
-	// var j int = 0
-	// var i int = 0
-
-	// for ( i <  m){
-	// 	if (pattern[j] == pattern[i]){
-	// 		b[i] = j + 1;
-	// 		i++;
-	// 		j++;
-	// 	} else if ( j > 0){
-	// 		j = b[j-1];
-	// 	} else{
-	// 		b[i] = 0;
-	// 		i++;
-	// 	}
-	// }
