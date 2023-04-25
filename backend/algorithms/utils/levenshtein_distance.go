@@ -1,6 +1,21 @@
 package utils
 
-import "math"
+import (
+	"math"
+	"sort"
+)
+
+type SimilarityScore struct {
+	Question string
+	Score    float64
+}
+
+func SortSimilarityScores(scores []SimilarityScore) []SimilarityScore {
+	sort.Slice(scores, func(i, j int) bool {
+		return scores[i].Score > scores[j].Score
+	})
+	return scores
+}
 
 // referensi https://www.youtube.com/watch?v=We3YDTzNXEk
 func Levenshtein_distance(stringOne, stringTwo string) int {
