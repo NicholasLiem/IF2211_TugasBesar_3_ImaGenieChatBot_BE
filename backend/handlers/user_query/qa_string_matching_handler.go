@@ -14,10 +14,14 @@ func QAStringMatchingHandler(query string) (string, error) {
 	for _, qa := range qas {
 		if utils.BoyerMooreMatch(query, qa.Question) {
 			return qa.Answer, nil
-		}
+		} 
+		// if (utils.KnuthMorrisPrattMatch(query, qa.Question) != -1){
+		// 	return qa.Answer, nil
+		// }
 	}
 
-	// Find top 3 most similar questions
+	
+	// Sorting similarity score
 	similarities := make([]utils.SimilarityScore, len(qas))
 	for i, qa := range qas {
 		score := utils.Similarity(query, qa.Question)
@@ -26,9 +30,17 @@ func QAStringMatchingHandler(query string) (string, error) {
 
 	utils.SortSimilarityScores(similarities)
 
-	if len(similarities) > 3 {
-		similarities = similarities[:3]
+
+	// TO DO : get the top one if the similiarity is >90%
+	if (similarities[0].Score > 90){
+		return similarities[0].Question, nil;
+	} else {
+		// Otherwise, Get top 3 most similar questions 
+		if len(similarities) > 3 {
+			similarities = similarities[:3]
+		}
 	}
+
 
 	similarQuestions := ""
 	for _, s := range similarities {
