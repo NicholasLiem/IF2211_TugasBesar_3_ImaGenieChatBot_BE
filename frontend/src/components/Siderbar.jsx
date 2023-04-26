@@ -11,17 +11,17 @@ const Siderbar = ({setSelectedId}) => {
   const handleIdChange = (id) =>{
     setSelectedId(id)
   }
-
   const fetchSessions = async () => {
     setIsLoading(true);
     try {
       const response = await fetch("http://localhost:5000/chat-sessions");
       const data = await response.json();
+      console.log("Selesai fetch")
       setSessions(data);
-      console.log(sessions)
       setIsLoading(false);
       setIsError(false);
     } catch (error) {
+      console.log(error)
       setIsError(true);
       setIsLoading(false);
     }
@@ -42,7 +42,10 @@ const Siderbar = ({setSelectedId}) => {
   const style = { color: "white", fontSize: "24px" };
   return (
     <Container
-      w={"280px"}
+      maxW={"20%"}
+      display={"flex"}
+      flexDirection={"column"}
+      flexWrap={"wrap"}
       bgColor={"rgb(32,33,35)"}
       minH={"100vh"}
       left={0}
@@ -51,6 +54,7 @@ const Siderbar = ({setSelectedId}) => {
       px={1}
     >
       <Container
+
         top={0}
         border={"1px solid #d9d9e3"}
         borderRadius={"md"}
