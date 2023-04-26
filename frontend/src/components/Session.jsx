@@ -5,7 +5,6 @@ import { BsChatLeft } from "react-icons/bs";
 const Session = ({ id }) => {
   const containerRef = useRef(null);
   const [content, setContent] = useState("");
-  const [title, setTitle] = useState("");
   const [firstQuestion, setFirstQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -22,7 +21,7 @@ const Session = ({ id }) => {
       }
     }
     answers += "..."
-    setTitle(answers)
+    return(answers)
   };
   const fetchData = async () => {
     setIsLoading(true);
@@ -33,7 +32,6 @@ const Session = ({ id }) => {
       data[0].sender === "user"
         ? setFirstQuestion(data[0].text)
         : setFirstQuestion(data[1].text);
-      getTitle()
       setContent(data);
       setIsLoading(false);
       setIsError(false);
@@ -71,7 +69,7 @@ const Session = ({ id }) => {
       ref={containerRef}
     >
       <BsChatLeft style={style} />
-      <Text ml={2}>{title}</Text>
+      <Text ml={2}>{getTitle()}</Text>
     </Container>
   );
 };
