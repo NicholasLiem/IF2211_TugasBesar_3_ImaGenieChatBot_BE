@@ -46,31 +46,31 @@ const SplashScreen  = () =>{
             }}
             >
                 <Image src={logo} w={"30vw"} 
-                    transitionDuration = "0.1s"
+                    transitionDuration = "0.3s"
                     transitionTimingFunction="ease-in-out"
                     zIndex={10}
                     transform={rot}
                     _hover={{
-                        transitionDuration :"0.1s",
+                        transitionDuration :"0.3s",
                         transitionTimingFunction:"ease-in-out",
                     }}
                     />
                 <Image position="absolute"
                 bottom={0} left={pos} zIndex={12}
                 src = {Cloud} h = "20vh" 
-                transitionDuration = "0.3s"
+                transitionDuration = "0.6s"
                 transitionTimingFunction="ease-in-out"
                 _hover={{
-                    transitionDuration :"0.3s",
+                    transitionDuration :"0.6s",
                     transitionTimingFunction:"ease-in-out",
                 }}/>
                 <Image position="absolute"
                 bottom={0} right={pos} zIndex={8}
                 src = {Cloud} h = "20vh" 
-                transitionDuration = "0.3s"
+                transitionDuration = "0.9s"
                 transitionTimingFunction="ease-in-out"
                 _hover={{
-                    transitionDuration :"0.3s",
+                    transitionDuration :"0.9s",
                     transitionTimingFunction:"ease-in-out",
                 }}/>
             </Box>

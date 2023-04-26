@@ -1,4 +1,4 @@
-import {Container, Box, Image, Text, Button} from "@chakra-ui/react"
+import {Container, Box, Text} from "@chakra-ui/react"
 import React, {useState} from "react";
 
 
