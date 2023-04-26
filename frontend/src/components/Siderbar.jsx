@@ -1,27 +1,39 @@
-import React, { useEffect } from "react";
-import { Container, Icon, Text } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
+import { Container, Text } from "@chakra-ui/react";
 import { IoIosAdd } from "react-icons/io";
 import Session from "./Session";
-const data = [
-  "Kenapa matahari terbit?",
-  "Kenapa air enak?",
-  "Berapa 1 + 1?",
-  "Siapa pencipta lampu?",
-  "Apakah alien nyata?",
-  "Gimana cara stop tubes?",
-  "Kok stima tubesnya banyak?",
-  "Gimana cara jalan ke itb?",
-  "Coba tes kalimat nya",
-];
+
 const Siderbar = () => {
-  useEffect(() =>{
-    const getSessions = async () =>{
-      const response = await fetch("http://localhost:3000/chat-sessions")
-      const data = await response.json()
-      console.log(data)
+  const [sessions, setSessions] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setIsError] = useState(false);
+  const fetchSessions = async () => {
+    setIsLoading(true);
+    try {
+      const response = await fetch("http://localhost:5000/chat-sessions");
+      const data = await response.json();
+      setSessions(data);
+      console.log(sessions)
+      setIsLoading(false);
+      setIsError(false);
+    } catch (error) {
+      setIsError(true);
+      setIsLoading(false);
     }
-    getSessions()
-  },[])
+  };
+  useEffect(() => {
+    fetchSessions();
+  }, []);
+  if(isLoading){
+    console.log("Loading...")
+    return <div className="loading">Loading...</div>
+  }
+
+  if(error){
+    console.log("Error sidebar")
+    return <div className="error">Error...</div>
+  }
+
   const style = { color: "white", fontSize: "24px" };
   return (
     <Container
@@ -57,19 +69,20 @@ const Siderbar = () => {
         p={0}
         overflowY={"scroll"}
         sx={{
-          "::-webkit-scrollbar" :{
-            width: "5px"
+          "::-webkit-scrollbar": {
+            width: "5px",
           },
-          "::-webkit-scrollbar-track" :{
-            background: "rgb(68,70,84)"
+          "::-webkit-scrollbar-track": {
+            background: "rgb(68,70,84)",
           },
-          "::-webkit-scrollbar-thumb" :{
-            background :"rgba(217,217,227,.8)"
-          }
+          "::-webkit-scrollbar-thumb": {
+            background: "rgba(217,217,227,.8)",
+          },
         }}
       >
-        {data.map((item) => {
-          return <Session title={item} />;
+        {sessions.map((item) => {
+          console.log(item)
+          return <Session id={item.id} />;
         })}
       </Container>
     </Container>
