@@ -13,7 +13,7 @@ func QAStringMatchingHandler(query string) (string, error) {
 	}
 
 	for _, qa := range qas {
-		if utils.BoyerMooreMatch(query, qa.Question) {
+		if utils.BoyerMooreMatch(qa.Question, query) {
 			return qa.Answer, nil
 		}
 		// if (utils.KnuthMorrisPrattMatch(query, qa.Question) != -1){
