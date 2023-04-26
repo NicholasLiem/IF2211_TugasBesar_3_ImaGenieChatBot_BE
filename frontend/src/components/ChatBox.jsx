@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Container, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
-import SessionPage from "./SessionPage";
 
 const ChatBox = ({ selectedId }) => {
   const [loading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState([]);
+  const inputRef = useRef()
   const fetchMesagges = async () => {
     setIsLoading(true);
     try {
@@ -31,6 +31,25 @@ const ChatBox = ({ selectedId }) => {
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
+    try {
+      console.log(text)
+      await fetch(`http://localhost:5000/chat-sessions/${selectedId}/messages`,{
+        method:"POST",
+        headers:{
+          'Content-Type' : 'application/json'
+        },
+        body: JSON.stringify({
+          text : text
+        })
+      })
+      .then(response => response.json())
+      setIsLoading(false);
+      fetchMesagges()
+    } catch (error) {
+      console.log(error);
+    }
+    inputRef.current?.focus()
     setText("");
   };
   const style = { fontSize: "2em", color: "white", marginBottom: 2 };
@@ -45,15 +64,16 @@ const ChatBox = ({ selectedId }) => {
       flexWrap={"wrap"}
       maxW="100%"
       p={0}
-    >
+    > 
       <Container
         display={"flex"}
-        flexDirection={"column"}
+        flexDirection={"row"}
         flexWrap={"wrap"}
         minW={"100%"}
         mt={10}
         p={0}
-        minH={"100%"}
+        maxH={"75%"}
+        overflowY={"scroll"}
       >
         {messages.map((message) => {
           if (message.sender === "user") {
@@ -68,10 +88,13 @@ const ChatBox = ({ selectedId }) => {
                 padding={6}
                 paddingLeft={10}
               >
-                <Text fontSize={"16px"} ml={10}> {message.text} </Text>
+                <Text fontSize={"16px"} ml={10}>
+                  {" "}
+                  {message.text}{" "}
+                </Text>
               </Container>
             );
-          } else if(message.sender==="bot"){
+          } else if (message.sender === "bot") {
             return (
               <Container
                 display={"flex"}
@@ -81,8 +104,11 @@ const ChatBox = ({ selectedId }) => {
                 textAlign={"left"}
                 padding={6}
                 paddingLeft={10}
+                gap={4}
               >
-                <Text color="white" fontSize={"16px"} ml={10}>{message.text} </Text>
+                <Text color="white" fontSize={"16px"} ml={10}>
+                  {message.text}{" "}
+                </Text>
               </Container>
             );
           }
@@ -93,6 +119,7 @@ const ChatBox = ({ selectedId }) => {
         <Input
           placeholder="Type your questions here"
           m={0}
+          ref={inputRef}
           w="60vw"
           alignSelf={"center"}
           bgColor={"rgb(64,65,79)"}

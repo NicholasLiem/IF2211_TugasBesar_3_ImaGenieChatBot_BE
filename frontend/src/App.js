@@ -9,9 +9,6 @@ import HelpPage from "./components/Help";
 function App() {
   const [selectedId, setSelectedId] = useState(null)
 
-  const select = (id) =>{
-    this.setSelectedId({id})
-  }
   return (
     <div className="App">
       <SplashScreen />
@@ -19,7 +16,7 @@ function App() {
       <Container
         bgColor={"rgb(52 53 65)"}
         maxW={"100vw"}
-        minH={"100vh"}
+        maxH={"100vh"}
         display={"flex"}
         overflowY={"hidden"}
         flexDirection={"row"}
