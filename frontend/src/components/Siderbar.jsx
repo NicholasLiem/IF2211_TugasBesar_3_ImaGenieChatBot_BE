@@ -3,10 +3,15 @@ import { Container, Text } from "@chakra-ui/react";
 import { IoIosAdd } from "react-icons/io";
 import Session from "./Session";
 
-const Siderbar = () => {
+const Siderbar = ({setSelectedId}) => {
   const [sessions, setSessions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setIsError] = useState(false);
+
+  const handleIdChange = (id) =>{
+    setSelectedId(id)
+  }
+
   const fetchSessions = async () => {
     setIsLoading(true);
     try {
@@ -81,8 +86,7 @@ const Siderbar = () => {
         }}
       >
         {sessions.map((item) => {
-          console.log(item)
-          return <Session id={item.id} />;
+          return <Session id={item.id} setSelectedId = {handleIdChange} />;
         })}
       </Container>
     </Container>

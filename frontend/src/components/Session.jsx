@@ -2,12 +2,13 @@ import React, { useEffect, useRef, useState } from "react";
 import { Container, Text } from "@chakra-ui/react";
 import { BsChatLeft } from "react-icons/bs";
 
-const Session = ({ id }) => {
+const Session = ({ id, setSelectedId }) => {
   const containerRef = useRef(null);
   const [content, setContent] = useState("");
   const [firstQuestion, setFirstQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+ 
   const getTitle = () => {
     const titles = firstQuestion.split(" ")
     let total_length = 0
@@ -67,6 +68,7 @@ const Session = ({ id }) => {
       _hover={{ bgColor: "#2a2b32", borderRadius: "md" }}
       cursor={"pointer"}
       ref={containerRef}
+      onClick={() => setSelectedId(id)}
     >
       <BsChatLeft style={style} />
       <Text ml={2}>{getTitle()}</Text>
