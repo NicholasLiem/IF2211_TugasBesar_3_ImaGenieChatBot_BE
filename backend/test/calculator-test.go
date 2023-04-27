@@ -1,4 +1,4 @@
-package test
+package main
 
 import (
 	"fmt"
@@ -37,6 +37,7 @@ func main() {
 		"1-2.6-33.4",
 		"1-1-1-1-1-1-1-1",
 		"4-5*4-8",
+		"24/8-3",
 		}
 
 	for _,e := range strArr {
