@@ -251,7 +251,7 @@ func (c *Calculator) Calculate() {
 			// fmt.Print("currentVal: "); c.DisplayCurrentVal()
 			for (!c.oDeque.IsEmpty()){
 				if (c.nDeque.nEff >= 2){
-					if (!c.IsAllPlusMinus()){
+					if (!c.IsAllSamePrecedence()){
 						int1 := c.nDeque.DeleteLast()
 						int2 := c.nDeque.DeleteLast()
 						op := c.oDeque.DeleteLast()
@@ -305,9 +305,10 @@ func (c *Calculator) DisplayCurrentVal(){
 	fmt.Println(c.currentVal)
 }
 
-func (c *Calculator) IsAllPlusMinus() bool {
+func (c *Calculator) IsAllSamePrecedence() bool {
+	prec := Precedence(c.oDeque.Top())
 	for _, o := range c.oDeque.buffer {
-		if (o != rune('+') && o != rune('-')){
+		if (Precedence(o) != prec){
 			return false
 		}
 	}
