@@ -3,11 +3,12 @@ import { Container, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
 
-const ChatBox = ({ selectedId }) => {
+const ChatBox = ({ selectedId, setSelectedId, fetchSessions, setSessions }) => {
   const [loading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const containerRef = useRef();
   const fetchMesagges = async () => {
+    console.log("Masuk fetch messages", selectedId);
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -16,6 +17,7 @@ const ChatBox = ({ selectedId }) => {
       const data = await response.json();
       setMessages(data);
       setIsLoading(false);
+      console.log("Selesia update messages");
     } catch (error) {
       setMessages([]);
       setIsLoading(false);
@@ -26,35 +28,73 @@ const ChatBox = ({ selectedId }) => {
   useEffect(() => {
     fetchMesagges();
   }, [selectedId]);
+
   useEffect(() => {
-    // Update the focus whenever messages change
     containerRef.current?.lastChild?.focus();
   }, [messages]);
   if (loading) {
-    return <div className="loading">Loading....</div>;
+    return <div className="loading">Chatbox....</div>;
   }
+  const addMessages = async (e) => {};
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-      console.log(text);
-      await fetch(
-        `http://localhost:5000/chat-sessions/${selectedId}/messages`,
-        {
+    if (selectedId) {
+      try {
+        await fetch(
+          `http://localhost:5000/chat-sessions/${selectedId}/messages`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: text,
+            }),
+          }
+        ).then((response) => response.json());
+        setIsLoading(false);
+        fetchMesagges();
+      } catch (error) {
+        console.log(error);
+      }
+    } else {
+      let id = null;
+      try {
+        const response = await fetch("http://localhost:5000/chat-sessions", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            text: text,
-          }),
+        });
+        const data = await response.json();
+        id = data.session_id;
+        setSelectedId(() => {
+          return id;
+        });
+        console.log("Fetchnya selesai di dalem chatbox", id);
+        try {
+          console.log(selectedId);
+          await fetch(`http://localhost:5000/chat-sessions/${id}/messages`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              text: text,
+            }),
+          }).then((response) => response.json());
+          fetchSessions();
+          fetchMesagges();
+          setIsLoading(false);
+        } catch (error) {
+          console.log(error);
         }
-      ).then((response) => response.json());
-      setIsLoading(false);
-      fetchMesagges();
-    } catch (error) {
-      console.log(error);
+      } catch (error) {
+        setIsLoading(false);
+      }
     }
+
     setText("");
   };
   const style = { fontSize: "2em", color: "white", marginBottom: 2 };

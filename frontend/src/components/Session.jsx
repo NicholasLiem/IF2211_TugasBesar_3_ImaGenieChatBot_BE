@@ -4,7 +4,6 @@ import { BsChatLeft } from "react-icons/bs";
 
 const Session = ({ id, setSelectedId }) => {
   const containerRef = useRef(null);
-  const [content, setContent] = useState("");
   const [firstQuestion, setFirstQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
@@ -33,7 +32,6 @@ const Session = ({ id, setSelectedId }) => {
       data[0].sender === "user"
         ? setFirstQuestion(data[0].text)
         : setFirstQuestion(data[1].text);
-      setContent(data);
       setIsLoading(false);
       setIsError(false);
     } catch (error) {
@@ -44,14 +42,11 @@ const Session = ({ id, setSelectedId }) => {
   const style = { color: "white", fontSize: "16px", marginTop: "0.5em" };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id,setSelectedId]);
   if (isLoading) {
-    console.log("Loading di session...");
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">Session...</div>;
   }
   if (isError) {
-    console.log("error...");
-    console.log(id);
     return <div className="error">Error...</div>;
   }
   return (
@@ -71,7 +66,7 @@ const Session = ({ id, setSelectedId }) => {
       onClick={() => setSelectedId(id)}
     >
       <BsChatLeft style={style} />
-      <Text ml={2}>{getTitle()}</Text>
+      <Text ml={2}>{getTitle() ? getTitle() : "New chat"}</Text>
     </Container>
   );
 };
