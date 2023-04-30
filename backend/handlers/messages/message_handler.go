@@ -85,7 +85,7 @@ func MessageHandler(c *fiber.Ctx) error {
 		if c.IsValid() {
 			responseMessage.Text = strconv.FormatFloat(c.GetSolution(), 'f', 2, 64)
 		} else {
-			responseMessage.Text = "Terdapat kesalahan notasi matematis"
+			responseMessage.Text = c.GetErrorMessage()
 		}
 	} else if isDateQuery(message.Text) {
 		d := &date.Date{}
@@ -96,7 +96,7 @@ func MessageHandler(c *fiber.Ctx) error {
 		if d.Valid {
 			responseMessage.Text = d.GetDateResult()
 		} else {
-			responseMessage.Text = "Tanggal tidak dapat dibaca, mungkin kesalahan penulisan"
+			responseMessage.Text = d.GetErrorMessage()
 		}
 	} else {
 		// Handle regular queries
