@@ -13,10 +13,10 @@ const INVALID_DATE_ERR int = 4
 
 var ErrorMessageList = []string{
 	"",
-	"Not an integer",
-	"String parsing error",
-	"<= 0 input",
-	"Invalid date",
+	"Invalid Input. Not an integer type input detected.",
+	"Invalid Input. String parsing error",
+	"Invalid Input. Integer with <= 0 value detected.",
+	"Invalid Input. Inputted date does not exist.",
 }
 
 var DayList = []string{"Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"}
@@ -181,6 +181,6 @@ func AmountOfLeapYearSoFar(y int) int {
 	return count
 }
 
-func (date *Date) GetResult() string {
-	return date.dayResult
+func (date *Date) GetErrorMessage() string {
+	return date.errorMessage
 }
