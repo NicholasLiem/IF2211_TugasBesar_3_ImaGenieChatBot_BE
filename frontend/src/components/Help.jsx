@@ -1,6 +1,85 @@
 import {Container, Box, Text} from "@chakra-ui/react"
 import React, {useState} from "react";
 
+const InstructionList = [
+    {
+        "title" : "Fitur Penambahan Pertanyaan",
+        "query" : "(Tambahkan | Add) pertanyaan <Pertanyaan> dengan jawaban <Jawaban>",
+        "example" : "Tambahkan pertanyaan mengapa bumi berbentuk balok? dengan jawaban karena Patrick adalah kuda laut",
+        "desc" : "Program menerima pasangan pertanyaan dan jawaban yang diinput user untuk dimasukkan ke dalam database.",
+    },
+    {
+        "title" : "Fitur Pengubahan Jawaban ",
+        "query" : "(Ubah | Update) pertanyaan <Pertanyaan> dengan jawaban <Jawaban>",
+        "example" : "Ubah pertanyaan mengapa bumi berbentuk balok? dengan jawaban karena jerapah suka makan ayam geprek",
+        "desc" : "Program mengubah jawaban dari pertanyaan tertentu yang terdapat pada database menjadi jawaban baru yang diinput oleh user.",
+    },
+    {
+        "title" : "Fitur Penghapusan Pertanyaan",
+        "query" : "(Hapus | Delete) pertanyaan <Pertanyaan>",
+        "example" : "Hapus pertanyaan mengapa bumi berbentuk balok?",
+        "desc" : "Program menghapus pasangan pertanyaan dan jawaban dari jenis pertanyaan yang diinput oleh user.",
+    },
+    {
+        "title" : "Fitur Kalkulator",
+        "query" : "(Hitunglah | Berapakah) <Input>",
+        "example" : "Hitunglah 2+4*8, Berapakah (((8*7)+6)-5)",
+        "desc" : "Program mengeluarkan hasil dari perhitungan yang diinput oleh user. Jika input hitungan invalid, program akan menampilkan pesan error.",
+    },
+    {
+        "title" : "Fitur Tanggal",
+        "query" : "Hari apakah tanggal <Input>",
+        "example" : "Hari apakah tanggal 26/7/2023",
+        "desc" : "Program mengeluarkan nama hari dari tanggal yang telah diinput oleh user. Jika tanggal tersebut invalid, program akan menampilkan pesan error.",
+    },
+    {
+        "title" : "Fitur Permainan Suit",
+        "query" : "Mainkan suit dengan (Batu | Gunting | Kertas)",
+        "example" : "Mainkan suit dengan Gunting",
+        "desc" : "Program akan bermain permainan suit dengan user. Hasil yang dikeluarkan program didapatkan dengan cara acak.",
+    },
+    {
+        "title" : "Fitur Pemilihan Acak",
+        "query" : "Pilih satu dari <Input1> <Input2> <Input-n>",
+        "example" : "Pilih satu dari Nicholas Nathania Juan",
+        "desc" : "Program akan memilih satu dari berbagai pilihan yang diinput oleh user.",
+    },
+]
+
+const InstructionInfo = ({title, query, example, desc}) => {
+    return (
+        <Container
+            bgColor={"#FFFFFF"}
+            padding={10}
+            marginY = {10}
+            minW={"70%"}
+            borderRadius={15}
+            borderWidth={"3px"}
+            borderColor={"#404040"}
+            shadow={"xl"}
+            transitionDuration="0.2s"
+            transitionTimingFunction="ease-in-out"
+            _hover={{
+                paddingY: "20",
+                transitionDuration:"0.2s",
+                transitionTimingFunction:"ease-in-out"
+            }}>
+            <Text fontSize={"2xl"} fontWeight={"bold"}>
+                {title}
+            </Text>
+            <Text fontSize={"l"} fontWeight={500} fontStyle={"italic"}>
+                {query}
+            </Text>
+            <Text>
+                {"Contoh: "}{example}
+            </Text>
+            <Text marginTop={2}>
+                {desc}
+            </Text>
+        </Container>
+    );
+}
+
 
 const HelpPage = () => {
 
@@ -39,7 +118,7 @@ const HelpPage = () => {
             <Box
             position={"absolute"}
             bgColor={"#000000"}
-            opacity={0.7}
+            opacity={0.4}
             top={0}
             left={layerPos}
             zIndex={5}
@@ -62,10 +141,35 @@ const HelpPage = () => {
             transitionDuration={"1s"}
             transitionTimingFunction={"ease-in-out"}
             padding={"20px"}
+
             > 
-                <Text fontSize={"3xl"} fontWeight={600}>
+                <Text color={"#2F2F3F"} fontSize={"4xl"} fontWeight={"bold"} marginBottom={4}>
                     Instructions
-                </Text>
+                </Text >
+                <Container 
+                bg={"#9898A8"}
+                borderRadius={"5px"}
+                overflowY={"scroll"}
+                scrollBehavior={"smooth"}
+                minW="100%"
+                h={"60vh"}
+                sx={{
+                    "::-webkit-scrollbar": {
+                        width: "8px",
+                    },
+                    "::-webkit-scrollbar-track": {
+                        background: "rgb(68,70,84)",
+                    },
+                    "::-webkit-scrollbar-thumb": {
+                        background: "#FFFFFF",
+                    },
+                    }}>
+                {InstructionList.map((data) => {
+                    return (
+                        <InstructionInfo title = {data.title} query={data.query} example= {data.example} desc={data.desc} />
+                    )
+                })}
+                </Container>
             </Box>
                 
         </Container>
