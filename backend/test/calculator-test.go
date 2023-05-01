@@ -6,7 +6,7 @@ import (
 	// "github.com/NicholasLiem/Tubes3_ImagineKelar/algorithms/date"
 )
 
-func main() {
+func testCalculator() {
 
 	// Calculator Testing
 	c := &calculator.Calculator{}
