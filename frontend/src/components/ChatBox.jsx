@@ -8,13 +8,13 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
   const [messages, setMessages] = useState([]);
   const containerRef = useRef();
   const fetchMesagges = async () => {
-    console.log("Selected id di chatbox : ",selectedId)
     setIsLoading(true);
     try {
       const response = await fetch(
         `http://localhost:5000/chat-sessions/${selectedId}/messages`
       );
       const data = await response.json();
+      data.sort((a,b) =>a.createdDate - b.createdDate)
       setMessages(data);
       setIsLoading(false);
     } catch (error) {
@@ -91,13 +91,12 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
           }
           setIsLoading(false);
         } catch (error) {
-          console.log(error);
+
         }
       } catch (error) {
         setIsLoading(false);
       }
     }
-
     setText("");
   };
   const style = { fontSize: "2em", color: "white", marginBottom: 2 };
