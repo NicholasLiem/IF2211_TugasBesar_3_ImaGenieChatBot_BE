@@ -55,7 +55,7 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
     return <div className="loading">Session...</div>;
   }
   if (isError) {
-    return <div className="error">Error...</div>;
+    return <div/>; //<div className="error">Error...</div>;
   }
   return (
     <Container
@@ -64,13 +64,12 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
       alignContent={"center"}
       display={"flex"}
       flexDirection={"row"}
-      mt={4}
       p={0}
-      pl={2}
-      py={3}
+      pl={5}
+      py={5}
       _hover={{ bgColor: "#2a2b32", borderRadius: "md" }}
       cursor={"pointer"}
-      bgColor={selectedId === id ? "#2a2b32":""}
+      bgColor={selectedId === id ? "#3a3b42":""}
       ref={containerRef}
       onClick={() => setSelectedId(id)}
       position={"relative"}

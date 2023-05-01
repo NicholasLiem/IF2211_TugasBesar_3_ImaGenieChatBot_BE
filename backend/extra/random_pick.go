@@ -20,14 +20,14 @@ func (r *RandomPick) Pick(n string, s string) {
 	nPick, err := strconv.Atoi(n)
 	if (err != nil || nPick < 0){
 		r.valid = false
-		r.message = "Jumlah pemilihan tidak valid. Silakan masukkan jumlah yang benar."
+		r.message = "The amount to choose is invalid. Please insert a correct one."
 		return
 	}
 	r.amount = nPick
 	r.buffer = strings.Split(s, " ")
 	if (r.amount > len(r.buffer)){
 		r.valid = false
-		r.message = "Jumlah pemilihan lebih banyak dibandingkan pilihan yang disediakan. Pemilihan tidak dapat dilakukan."
+		r.message = "The amount to choose is greater than the amount of choices. Please make sure to insert the right one."
 		return
 	}
 	fmt.Println(r.amount, r.buffer)
@@ -38,9 +38,9 @@ func (r *RandomPick) Pick(n string, s string) {
 
 func (r *RandomPick) GetOutput() {
 	if (r.amount == 0){
-		r.message = "Program tidak memilih apapun."
+		r.message = "Program does not choose anything."
 	} else if (r.amount == len(r.buffer)){
-		r.message = "Program memilih seluruh pilihan jawaban."
+		r.message = "Program chooses every given options."
 	} else {
 		var temp = []int{}
 		for  len(temp) < r.amount{
@@ -51,7 +51,7 @@ func (r *RandomPick) GetOutput() {
 			}
 
 		}
-		r.message = "Dari "+strconv.Itoa(len(r.buffer))+ " pilihan yang ada. Program memilih "
+		r.message = "From "+strconv.Itoa(len(r.buffer))+ " given choises. Program decides to choose "
 		for i, s := range temp{
 			tempStr := ""
 			if (i == len(temp)-1){

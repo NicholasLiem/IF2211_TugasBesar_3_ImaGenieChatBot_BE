@@ -7,12 +7,14 @@ import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/query_utils"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/user_query"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/models"
+	"github.com/NicholasLiem/Tubes3_ImagineKelar/extra"
 	"github.com/gofiber/fiber/v2"
 	"github.com/google/uuid"
 	"regexp"
 	"strconv"
 	"strings"
 	"time"
+	"fmt"
 )
 
 func MessageHandler(c *fiber.Ctx) error {
@@ -89,7 +91,7 @@ func MessageHandler(c *fiber.Ctx) error {
 		}
 	} else if isDateQuery(message.Text) {
 		d := &date.Date{}
-		dateRegex := regexp.MustCompile(`^hari apakah tanggal (\d{2}\/\d{2}\/\d{4})\?$`)
+		dateRegex := regexp.MustCompile(`^hari apakah tanggal (\d{1,2}\/\d{1,2}\/\d{4})\?$`)
 		match := dateRegex.FindStringSubmatch(message.Text)
 		dateString := match[1]
 		d.GetDayFromDate(dateString)
@@ -98,6 +100,21 @@ func MessageHandler(c *fiber.Ctx) error {
 		} else {
 			responseMessage.Text = d.GetErrorMessage()
 		}
+	} else if isGameQuery(message.Text) {
+		rps := &extra.RPSGame{}
+		rpsRegex := regexp.MustCompile(`^mainkan suit dengan (\w+)$`)
+		match := rpsRegex.FindStringSubmatch(message.Text)
+		inputString := match[1]
+		rps.PlayGame(inputString)
+		responseMessage.Text = rps.GetMessage()
+	} else if isRandomPickQuery(message.Text){
+		rd := &extra.RandomPick{}
+		rdRegex := regexp.MustCompile(`^pilih (\d+) dari ([\w\s]+)$`)
+		match := rdRegex.FindStringSubmatch(message.Text)
+		amountString := match[1]
+		inputString := match[2]
+		rd.Pick(amountString, inputString)
+		responseMessage.Text = rd.GetMessage()
 	} else {
 		// Handle regular queries
 		response, err := user_query.QAStringMatchingHandler(message.Text)
@@ -127,6 +144,21 @@ func isMathQuery(text string) bool {
 }
 
 func isDateQuery(text string) bool {
-	r := regexp.MustCompile(`^hari apakah tanggal (\d{2}\/\d{2}\/\d{4})\?$`)
+	r := regexp.MustCompile(`^hari apakah tanggal (\d{1,2}\/\d{1,2}\/\d{4})\?$`)
 	return r.MatchString(text)
 }
+
+func isGameQuery(text string) bool {
+	fmt.Println(text)
+	r := regexp.MustCompile(`^mainkan suit dengan (\w+)$`)
+	fmt.Println(r.MatchString(text))
+	return r.MatchString(text)
+}
+
+func isRandomPickQuery(text string) bool {
+	fmt.Println(text)
+	r := regexp.MustCompile(`^pilih (\d+) dari ([\w\s]+)$`)
+	fmt.Println(r.MatchString(text))
+	return r.MatchString(text)
+}
+

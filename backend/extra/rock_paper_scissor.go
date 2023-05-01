@@ -28,15 +28,15 @@ func (r *RPSGame) PlayGame(s string) {
 		r.programOutput = RPSLIST[num]
 		r.UpdateGameStatus()
 		if (r.status == 1){
-			r.message = "Program mengeluarkan <"+r.programOutput+">. Keberuntungan berada di pihakmu, kamu memenangkan permainan."
+			r.message = "Program uses <"+r.programOutput+">. Luck is on your side, you have won the game."
 		} else if (r.status == 2){
-			r.message = "Program mengeluarkan <"+r.programOutput+">. Permainan berakhir seri."
+			r.message = "Program uses <"+r.programOutput+">. The game ends with a draw."
 		} else {
-			r.message = "Program mengeluarkan <"+r.programOutput+">. Skill yang kamu miliki masih rendah, kamu kalah dalam permainan."
+			r.message = "Program uses <"+r.programOutput+">. You might have a skill issue, you lost the game."
 		}
 	} else {
 		r.status = -1
-		r.message = "Input \""+r.userInput+"\" merupakan input yang invalid. Silakan memberikan masukan yang benar."
+		r.message = "Input \""+r.userInput+"\" is invalid. Please insert a correct one."
 	}
 }
 

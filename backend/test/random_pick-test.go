@@ -26,7 +26,7 @@ func testRandomPick (){
 		"loh",
 	}
 
-	for i,_  := range test {
+	for i  := range test {
 		r.Pick(num[i], test[i])
 		fmt.Println(r.GetMessage())
 	}

@@ -40,8 +40,8 @@ const InstructionList = [
     },
     {
         "title" : "Fitur Pemilihan Acak",
-        "query" : "Pilih satu dari <Input1> <Input2> <Input-n>",
-        "example" : "Pilih satu dari Nicholas Nathania Juan",
+        "query" : "Pilih <Angka> dari <Input1> <Input2> <Input-n>",
+        "example" : "Pilih 2 dari Nicholas Nathania Juan, Pilih 1 dari Haha Hihi Huhu",
         "desc" : "Program akan memilih satu dari berbagai pilihan yang diinput oleh user.",
     },
 ]

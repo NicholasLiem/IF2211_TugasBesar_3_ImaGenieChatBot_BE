@@ -1,5 +1,5 @@
 import React, { useRef } from "react";
-import { Container, Input, Text } from "@chakra-ui/react";
+import { Container, Input, Text, Button, Stack, Radio, RadioGroup, Box, Wrap} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
 
@@ -23,6 +23,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
     }
   };
   const [text, setText] = useState("");
+  const [radioValue, setRadioValue] = useState("KMP");
 
   useEffect(() => {
     fetchMesagges();
@@ -99,7 +100,8 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
     }
     setText("");
   };
-  const style = { fontSize: "2em", color: "white", marginBottom: 2 };
+  
+  const style = { fontSize: "1.5em", color: "white", marginBottom: 2 };
   return (
     <Container
       m={0}
@@ -114,12 +116,12 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
     >
       <Container
         display={"flex"}
-        flexDirection={"row"}
-        flexWrap={"wrap"}
-        minW={"100%"}
+        // bgColor={"rgb(102 103 115)"}
+        flexDirection={"column"}
+        minW={"70%"}
         mt={10}
-        p={0}
-        maxH={"75%"}
+        px={5}
+        h={"80%"}
         overflowY={"scroll"}
         sx={{
           "::-webkit-scrollbar": {
@@ -137,64 +139,108 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         {messages.map((message, index) => {
           if (message.sender === "user") {
             return (
-              <Container
+              <Box
                 display={"flex"}
-                flexDirection="column"
+                flexDirection={"column"}
+                borderRadius={"lg"}
+                bgColor={"#9496A4"}
                 color={"white"}
-                minW="100%"
-                padding={6}
-                gap={4}
+                w="55%"
+                alignSelf={"flex-end"}
+                alignItems={"flex-end"}
+                py={8}
+                px={10}
+                gap={2}
+                my={3}
                 tabIndex={index + 1}
+                transitionDuration={"0.8s"}
+                transitionTimingFunction={"ease-in-out"}
               >
-                <Text fontSize={"16px"} w="70%" textAlign={"left"} mx="auto">
-                  {message.text}
+                <Text fontSize={"20px"} fontWeight={"bold"} left={0}>
+                    You:
                 </Text>
-              </Container>
+                <Text fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"right"} mx="auto">
+                {message.text}{" "}
+                </Text>
+              </Box>
             );
           } else if (message.sender === "bot") {
             return (
-              <Container
+              <Box
                 display={"flex"}
                 flexDirection={"column"}
-                bgColor={"#444654"}
-                minW="100%"
-                textAlign={"left"}
-                padding={6}
-                gap={4}
+                borderRadius={"lg"}
+                bgColor={"#545664"}
+                color={"white"}
+                w="55%"
+                alignSelf={"flex-start"}
+                alignItems={"flex-start"}
+                py={8}
+                px={10}
+                gap={2}
+                my={3}
                 tabIndex={index + 1}
+                transitionDuration={"0.8s"}
+                transitionTimingFunction={"ease-in-out"}
               >
-                <Text
-                  color="white"
-                  fontSize={"16px"}
-                  w="70%"
-                  textAlign={"left"}
-                  mx="auto"
-                >
+                <Text fontSize={"20px"} fontWeight={"bold"} left={0}>
+                    ImaGenieKelar:
+                </Text>
+                <Text fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}>
                   {message.text}{" "}
                 </Text>
-              </Container>
+              </Box>
             );
           }
         })}
       </Container>
 
-      <form onSubmit={handleSubmit}>
-        <Input
-          placeholder="Type your questions here"
-          m={0}
-          w="60vw"
-          alignSelf={"center"}
-          bgColor={"rgb(64,65,79)"}
-          py={6}
-          borderRadius={"md"}
-          color="white"
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-        />
-        <button style={style} type="submit">
-          <IoIosPaperPlane />
-        </button>
-      </form>
+        <form onSubmit={handleSubmit} style={{width: "100%", justifyContent:"center", alignItems:"center", gap:"0"}}>
+            <RadioGroup marginRight={10} value={radioValue} justifySelf={"flex-start"}
+            borderWidth={"2px"} p={4} borderRadius={"xl"} bgColor={"#525260"} colorScheme="white"
+            onChange={() => {radioValue === "KMP" ? setRadioValue("BM") : setRadioValue("KMP")}} >
+                <Stack direction={"row"} gap={3}>
+                    <Radio size="md" value='KMP'> <Text color={"white"}>  KMP </Text> </Radio>
+                    <Radio size="md" value='BM'> <Text color={"white"}>  BM </Text> </Radio>
+                </Stack>
+            </RadioGroup>
+            
+            <Input
+            placeholder="Type your questions here..."
+            m={0}
+            w="60%"
+            py={6}
+            alignSelf={"center"}
+            bgColor={"rgb(64,65,79)"}
+            borderWidth={"2.5px"}
+            borderLeftRadius={"3xl"}
+            borderRightRadius={0}
+            borderRightWidth={"0.5px"}
+            color="white"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            />
+            <Button 
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            style={style} type="submit"
+            py={6}
+            borderColor={"FFFFFF"}
+            borderWidth={"2.5px"}
+            borderLeftRadius={0}
+            borderRightRadius={"3xl"}
+            borderLeftWidth={0}
+            bgColor={"rgb(64,65,79)"}
+            pl={3}
+            pr={4}
+            _hover = {{
+                bgColor:"rgb(89,90,104)"
+            }}
+            >
+                <IoIosPaperPlane />
+            </Button>
+        </form>
     </Container>
   );
 };
