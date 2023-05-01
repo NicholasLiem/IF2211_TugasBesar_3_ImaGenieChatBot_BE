@@ -2,42 +2,29 @@ import React, { useEffect, useState } from "react";
 import { Container, Text } from "@chakra-ui/react";
 import { IoIosAdd } from "react-icons/io";
 import Session from "./Session";
+import { BsTrash } from "react-icons/bs";
 
-const Siderbar = () => {
-  const [sessions, setSessions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setIsError] = useState(false);
-  const fetchSessions = async () => {
-    setIsLoading(true);
-    try {
-      const response = await fetch("http://localhost:5000/chat-sessions");
-      const data = await response.json();
-      setSessions(data);
-      console.log(sessions)
-      setIsLoading(false);
-      setIsError(false);
-    } catch (error) {
-      setIsError(true);
-      setIsLoading(false);
-    }
+const Siderbar = ({
+  sessions,
+  isLoading,
+  selectedId,
+  fetchSessions,
+  setSelectedId,
+}) => {
+  const handleIdChange = (id) => {
+    setSelectedId(id);
   };
-  useEffect(() => {
-    fetchSessions();
-  }, []);
-  if(isLoading){
-    console.log("Loading...")
-    return <div className="loading">Loading...</div>
-  }
 
-  if(error){
-    console.log("Error sidebar")
-    return <div className="error">Error...</div>
+  if (isLoading) {
+    return <div className="loading">Sidebar...</div>;
   }
 
   const style = { color: "white", fontSize: "24px" };
   return (
     <Container
-      w={"280px"}
+      maxW={"20%"}
+      display={"flex"}
+      flexDirection={"column"}
       bgColor={"rgb(32,33,35)"}
       minH={"100vh"}
       left={0}
@@ -56,6 +43,7 @@ const Siderbar = () => {
         flexWrap={"wrap"}
         flexDirection={"row"}
         _hover={{ opacity: "0.75", brightness: "1.3" }}
+        onClick={() => handleIdChange(null)}
       >
         <IoIosAdd style={style} />
         <Text color={"white"} ml={2}>
@@ -65,7 +53,6 @@ const Siderbar = () => {
       <Container
         display={"flex"}
         flexDirection={"column"}
-        flexWrap={"wrap"}
         p={0}
         overflowY={"scroll"}
         sx={{
@@ -81,8 +68,14 @@ const Siderbar = () => {
         }}
       >
         {sessions.map((item) => {
-          console.log(item)
-          return <Session id={item.id} />;
+          return (
+            <Session
+              selectedId={selectedId}
+              id={item.id}
+              setSelectedId={handleIdChange}
+              fetchSessions = {fetchSessions}
+            />
+          );
         })}
       </Container>
     </Container>

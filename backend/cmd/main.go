@@ -8,7 +8,6 @@ import (
 func main() {
 	database.ConnectDb()
 	app := fiber.New()
-
 	app.Use(func(c *fiber.Ctx) error {
 		c.Set("Access-Control-Allow-Origin", "*")
 		c.Set("Access-Control-Allow-Headers", "Origin, Content-Type, Accept")
@@ -18,8 +17,6 @@ func main() {
 		}
 		return c.Next()
 	})
-
 	setupRoutes(app)
-
 	app.Listen(":5000")
 }

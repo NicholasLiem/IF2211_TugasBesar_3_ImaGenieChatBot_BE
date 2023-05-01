@@ -1,27 +1,27 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Container, Text } from "@chakra-ui/react";
-import { BsChatLeft } from "react-icons/bs";
+import { BsChatLeft, BsTrash } from "react-icons/bs";
 
-const Session = ({ id }) => {
+const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
   const containerRef = useRef(null);
-  const [content, setContent] = useState("");
   const [firstQuestion, setFirstQuestion] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [isError, setIsError] = useState(false);
+
   const getTitle = () => {
-    const titles = firstQuestion.split(" ")
-    let total_length = 0
-    let answers = ""
-    for(let i = 0; i < titles.length;i++){
-      if(total_length + titles[i].length*12 < 240){
-        answers += (titles[i] + " ")
-        total_length += titles[i].length * 12
-      }else{
-        break
+    const titles = firstQuestion.split(" ");
+    let total_length = 0;
+    let answers = "";
+    for (let i = 0; i < titles.length; i++) {
+      if (total_length + titles[i].length * 12 < 240) {
+        answers += titles[i] + " ";
+        total_length += titles[i].length * 12;
+      } else {
+        break;
       }
     }
-    answers += "..."
-    return(answers)
+    answers += "...";
+    return answers;
   };
   const fetchData = async () => {
     setIsLoading(true);
@@ -32,7 +32,6 @@ const Session = ({ id }) => {
       data[0].sender === "user"
         ? setFirstQuestion(data[0].text)
         : setFirstQuestion(data[1].text);
-      setContent(data);
       setIsLoading(false);
       setIsError(false);
     } catch (error) {
@@ -40,17 +39,22 @@ const Session = ({ id }) => {
       setIsLoading(false);
     }
   };
+
+  const handleDelete = async () => {
+    await fetch(`http://localhost:5000/chat-sessions/${id}`,{
+      method:"DELETE",
+    })
+    setSelectedId(null)
+    fetchSessions()
+  };
   const style = { color: "white", fontSize: "16px", marginTop: "0.5em" };
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [id, setSelectedId]);
   if (isLoading) {
-    console.log("Loading di session...");
-    return <div className="loading">Loading...</div>;
+    return <div className="loading">Session...</div>;
   }
   if (isError) {
-    console.log("error...");
-    console.log(id);
     return <div className="error">Error...</div>;
   }
   return (
@@ -66,10 +70,19 @@ const Session = ({ id }) => {
       py={3}
       _hover={{ bgColor: "#2a2b32", borderRadius: "md" }}
       cursor={"pointer"}
+      bgColor={selectedId === id ? "#2a2b32":""}
       ref={containerRef}
+      onClick={() => setSelectedId(id)}
+      position={"relative"}
     >
       <BsChatLeft style={style} />
-      <Text ml={2}>{getTitle()}</Text>
+      <Text ml={2}>{getTitle() ? getTitle() : "New chat"}</Text>
+      {selectedId === id && (
+        <BsTrash
+          style={{ position: "absolute", right: 15, fontSize: "20px" }}
+          onClick={handleDelete}
+        />
+      )}
     </Container>
   );
 };
