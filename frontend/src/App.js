@@ -14,23 +14,18 @@ function App() {
   const [isNew,setIsNew] = useState(false)
   const fetchSessions = async () => {
     setIsLoading(true);
-    console.log("Masuk fetch sessions")
     try {
       const response = await fetch("http://localhost:5000/chat-sessions");
       const data = await response.json();
-      console.log("Selesai fetch");
       setSessions(data);
-      console.log(data)
       setIsLoading(false);
       setIsError(false);
     } catch (error) {
-      console.log(error);
       setIsError(true);
       setIsLoading(false);
     }
   };
   useEffect(()=>{
-    console.log("Awal - awal render")
     fetchSessions()
   },[])
 
@@ -53,6 +48,7 @@ function App() {
           isLoading={isLoading}
           error={error}
           fetchSessions={fetchSessions}
+          selectedId = {selectedId}
         />
         <ChatBox
           selectedId={selectedId}

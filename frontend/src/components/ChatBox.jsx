@@ -3,12 +3,12 @@ import { Container, Input, Text } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
 
-const ChatBox = ({ selectedId, setSelectedId, fetchSessions, setSessions }) => {
+const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
   const [loading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const containerRef = useRef();
   const fetchMesagges = async () => {
-    console.log("Masuk fetch messages", selectedId);
+    console.log("Selected id di chatbox : ",selectedId)
     setIsLoading(true);
     try {
       const response = await fetch(
@@ -17,7 +17,6 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions, setSessions }) => {
       const data = await response.json();
       setMessages(data);
       setIsLoading(false);
-      console.log("Selesia update messages");
     } catch (error) {
       setMessages([]);
       setIsLoading(false);
@@ -35,7 +34,6 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions, setSessions }) => {
   if (loading) {
     return <div className="loading">Chatbox....</div>;
   }
-  const addMessages = async (e) => {};
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -53,10 +51,10 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions, setSessions }) => {
             }),
           }
         ).then((response) => response.json());
-        setIsLoading(false);
         fetchMesagges();
+        setIsLoading(false);
       } catch (error) {
-        console.log(error);
+
       }
     } else {
       let id = null;
@@ -69,12 +67,8 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions, setSessions }) => {
         });
         const data = await response.json();
         id = data.session_id;
-        setSelectedId(() => {
-          return id;
-        });
-        console.log("Fetchnya selesai di dalem chatbox", id);
+        setSelectedId(id);
         try {
-          console.log(selectedId);
           await fetch(`http://localhost:5000/chat-sessions/${id}/messages`, {
             method: "POST",
             headers: {
@@ -85,7 +79,16 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions, setSessions }) => {
             }),
           }).then((response) => response.json());
           fetchSessions();
-          fetchMesagges();
+          try {
+            const response = await fetch(
+              `http://localhost:5000/chat-sessions/${id}/messages`
+            );
+            const data = await response.json();
+            setMessages(data);
+          } catch (error) {
+            setMessages([]);
+            setIsLoading(false);
+          }
           setIsLoading(false);
         } catch (error) {
           console.log(error);

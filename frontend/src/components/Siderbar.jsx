@@ -2,15 +2,21 @@ import React, { useEffect, useState } from "react";
 import { Container, Text } from "@chakra-ui/react";
 import { IoIosAdd } from "react-icons/io";
 import Session from "./Session";
+import { BsTrash } from "react-icons/bs";
 
-const Siderbar = ({sessions,isLoading,error,fetchSessions,setSelectedId}) => {
-  console.log("Ini sessions di sidebar",sessions)
-  const handleIdChange = (id) =>{
-    setSelectedId(id)
-  }
-  
-  if(isLoading){
-    return <div className="loading">Sidebar...</div>
+const Siderbar = ({
+  sessions,
+  isLoading,
+  selectedId,
+  fetchSessions,
+  setSelectedId,
+}) => {
+  const handleIdChange = (id) => {
+    setSelectedId(id);
+  };
+
+  if (isLoading) {
+    return <div className="loading">Sidebar...</div>;
   }
 
   const style = { color: "white", fontSize: "24px" };
@@ -27,7 +33,6 @@ const Siderbar = ({sessions,isLoading,error,fetchSessions,setSelectedId}) => {
       px={1}
     >
       <Container
-
         top={0}
         border={"1px solid #d9d9e3"}
         borderRadius={"md"}
@@ -38,7 +43,7 @@ const Siderbar = ({sessions,isLoading,error,fetchSessions,setSelectedId}) => {
         flexWrap={"wrap"}
         flexDirection={"row"}
         _hover={{ opacity: "0.75", brightness: "1.3" }}
-        onClick={() =>handleIdChange(null)}
+        onClick={() => handleIdChange(null)}
       >
         <IoIosAdd style={style} />
         <Text color={"white"} ml={2}>
@@ -48,7 +53,6 @@ const Siderbar = ({sessions,isLoading,error,fetchSessions,setSelectedId}) => {
       <Container
         display={"flex"}
         flexDirection={"column"}
-        flexWrap={"wrap"}
         p={0}
         overflowY={"scroll"}
         sx={{
@@ -64,7 +68,14 @@ const Siderbar = ({sessions,isLoading,error,fetchSessions,setSelectedId}) => {
         }}
       >
         {sessions.map((item) => {
-          return <Session id={item.id} setSelectedId = {handleIdChange} />;
+          return (
+            <Session
+              selectedId={selectedId}
+              id={item.id}
+              setSelectedId={handleIdChange}
+              fetchSessions = {fetchSessions}
+            />
+          );
         })}
       </Container>
     </Container>
