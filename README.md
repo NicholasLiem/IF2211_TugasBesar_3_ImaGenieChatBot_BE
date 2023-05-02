@@ -15,6 +15,7 @@
 * [Author](#author)
 
 ## **📄 Program Description**
+In this assignment, the program is required to develop a simple ChatGPT application by applying the simplest QA approach. The search for the most similar question to the question given by the user is done using the Knuth-Morris-Pratt (KMP) and Boyer-Moore (BM) string matching algorithms. Regex is used to determine the format of the question. If there is no exact match between the user's question and the questions in the database through the KMP or BM algorithms, then the chatbot will use the most similar question with at least 90% similarity. If there is no question with a similarity above 90%, then the chatbot will provide a maximum of 3 options for the most similar questions to be selected by the user. The similarity calculation is calculated using Levenshtein Distance. This application should also have several features such as text questions, calculator, date feature, add question and answer to the database, and delete question from the database. The classification is done using regex and is classified like everyday language.
 
 ## **🛠️ Required Program**
 | Required Program | Reference Link                            |
