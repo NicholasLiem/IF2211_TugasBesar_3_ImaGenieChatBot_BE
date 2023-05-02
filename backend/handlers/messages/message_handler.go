@@ -44,9 +44,10 @@ func MessageHandler(c *fiber.Ctx) error {
 
 	// Insert user message
 	userMessage := models.Message{
-		SessionID: sessionID,
-		Sender:    "user",
-		Text:      message.Text,
+		SessionID:   sessionID,
+		Sender:      "user",
+		PatternType: message.PatternType,
+		Text:        message.Text,
 	}
 	if err := query_utils.InsertMessage(userMessage); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to insert user's message to database")
@@ -67,7 +68,7 @@ func MessageHandler(c *fiber.Ctx) error {
 		count := 0
 		for index := range userQueries {
 			if userQueries[index] != "" {
-				resultingText, err := ResponseText(userQueries[index])
+				resultingText, err := ResponseText(userQueries[index], message.PatternType)
 				if err != nil {
 					return fiber.NewError(fiber.StatusBadRequest, "Fail to get answer response")
 				}
@@ -81,7 +82,7 @@ func MessageHandler(c *fiber.Ctx) error {
 		responseMessage.Text = resultText
 	} else {
 		// Kalo misalnya kalimat terdiri dari 1 kalimat saja.
-		responseMessage.Text, err = ResponseText(message.Text)
+		responseMessage.Text, err = ResponseText(message.Text, message.PatternType)
 		if err != nil {
 			return fiber.NewError(fiber.StatusBadRequest, "Fail to get answer response")
 		}
@@ -106,6 +107,11 @@ func isMathQuery(text string) bool {
 	return r.MatchString(text)
 }
 
+//func isSpaceQuery(text string) bool {
+//	r := regexp.MustCompile(`(\s)+`)
+//	return r.MatchString(text)
+//}
+
 func isDateQuery(text string) bool {
 	r := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/\d{4})\?[\s]*$`)
 	return r.MatchString(text)
@@ -121,7 +127,7 @@ func isRandomPickQuery(text string) bool {
 	return r.MatchString(text)
 }
 
-func ResponseText(text string) (string, error) {
+func ResponseText(text string, patternType string) (string, error) {
 	var response string
 	if isQAQuery(text) {
 		result, err := user_query.QuestionAnswerClassifier(text)
@@ -178,7 +184,7 @@ func ResponseText(text string) (string, error) {
 		response = rd.GetMessage()
 	} else {
 		// Handle regular queries
-		queryResponse, err := user_query.QAStringMatchingHandler(text)
+		queryResponse, err := user_query.QAStringMatchingHandler(text, patternType)
 		if err != nil {
 			return "", fiber.NewError(fiber.StatusBadRequest, err.Error())
 		}
