@@ -17,24 +17,34 @@
 ## **📄 Program Description**
 
 ## **🛠️ Required Program**
-| Required Program | Reference Link |
-|------------------|-------------|
+| Required Program | Reference Link                            |
+|------------------|-------------------------------------------|
 | Go (Golang)      | [Go (Golang)](https://go.dev/doc/install) |
-| Go Fiber         | [Go Fiber](https://gofiber.io/) |
-| Air              | [Air](https://github.com/cosmtrek/air) |
+| Go Fiber         | [Go Fiber](https://gofiber.io/)           |
+| Air              | [Air](https://github.com/cosmtrek/air)    |
 | PostgreSQL       | [PostgreSQL](https://www.postgresql.org/) |
-| ReactJS          | [ReactJS](https://react.dev/) |
-| Chakra UI        | [ChakraUI](https://chakra-ui.com/) |
+| ReactJS          | [ReactJS](https://react.dev/)             |
+| Chakra UI        | [ChakraUI](https://chakra-ui.com/)        |
+| Docker | [Docker](https://www.docker.com/)         |
 
-## **💻 How to Run The Program**
+## **💻 How to Run The Program (Local)**
 
-[//]: # (1. Clone this repo using this command)
-
-[//]: # ()
-[//]: # (```sh)
-
-[//]: # (```)
-
+1. Make .env file with this criteria
+```sh
+DB_HOST = db
+DB_USERNAME = username
+DB_NAME = your_db_name
+DB_PASSWORD = password
+```
+2. Compose your docker containers
+```sh
+docker compose up
+```
+Your local server should serve at port 5000 for the backend services and port 5432 for the Postgres database
+3. Interract with Endpoints (Look up the documentation)
+```sh
+https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit#heading=h.rmo71eiaumdw
+```
 
 ## **📷 Implementation Screenshots**
 
