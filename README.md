@@ -14,7 +14,7 @@
 * [Folders and Files Description](#folders-and-files-description)
 * [Author](#author)
 
-## ** 📄 Program Description**
+## **📄 Program Description**
 
 ## **🛠️ Required Program**
 | Required Program | Reference Link |
