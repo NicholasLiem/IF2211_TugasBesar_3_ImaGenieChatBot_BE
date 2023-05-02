@@ -6,19 +6,22 @@ import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/models"
 )
 
-func QAStringMatchingHandler(query string) (string, error) {
+func QAStringMatchingHandler(query string, patternType string) (string, error) {
 	qas, err := query_utils.GetAllQuestionAnswers()
 	if err != nil {
 		return "", err
 	}
 
 	for _, qa := range qas {
-		if utils.BoyerMooreMatch(qa.Question, query) {
-			return qa.Answer, nil
+		if patternType == "BM" {
+			if utils.BoyerMooreMatch(qa.Question, query) {
+				return qa.Answer, nil
+			}
+		} else {
+			if utils.KnuthMorrisPrattMatch(query, qa.Question) != -1 {
+				return qa.Answer, nil
+			}
 		}
-		// if (utils.KnuthMorrisPrattMatch(query, qa.Question) != -1){
-		// 	return qa.Answer, nil
-		// }
 	}
 
 	// Sorting similarity score
@@ -26,7 +29,7 @@ func QAStringMatchingHandler(query string) (string, error) {
 
 	// Handle empty db
 	if len(similarities) == 0 {
-		return "Belum ada pertanyaan mas :(", nil
+		return "You have not added any questions to the database, please add them first.", nil
 	}
 
 	for i, qa := range qas {
@@ -36,7 +39,7 @@ func QAStringMatchingHandler(query string) (string, error) {
 
 	utils.SortSimilarityScores(similarities)
 
-	// TO DO : get the top one if the similiarity is >90%
+	// TO DO : get the top one if the similarity is >90%
 	if similarities[0].Score > 90 {
 		return getAnswerFromQuestion(similarities[0].Question, qas), nil
 	} else {
