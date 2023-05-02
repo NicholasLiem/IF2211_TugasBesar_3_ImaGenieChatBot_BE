@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Container, Text } from "@chakra-ui/react";
 import { BsChatLeft, BsTrash } from "react-icons/bs";
+import { Palette } from "../assets/palette";
 
 const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
   const containerRef = useRef(null);
@@ -13,7 +14,7 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
     let total_length = 0;
     let answers = "";
     for (let i = 0; i < titles.length; i++) {
-      if (total_length + titles[i].length * 12 < 240) {
+      if (total_length + titles[i].length * 12 < 180) {
         answers += titles[i] + " ";
         total_length += titles[i].length * 12;
       } else {
@@ -65,17 +66,19 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
       display={"flex"}
       flexDirection={"row"}
       p={0}
-      pl={5}
+      pl={selectedId === id? 10: 5}
       py={5}
-      _hover={{ bgColor: "#2a2b32", borderRadius: "md" }}
+      borderWidth={"2px"}
+      borderColor={Palette.dark}
+      _hover={{ borderColor:Palette.white, borderRadius: "md" }}
       cursor={"pointer"}
-      bgColor={selectedId === id ? "#3a3b42":""}
+      bgColor={selectedId === id ? Palette.gray :""}
       ref={containerRef}
       onClick={() => setSelectedId(id)}
       position={"relative"}
     >
       <BsChatLeft style={style} />
-      <Text ml={2}>{getTitle() ? getTitle() : "New chat"}</Text>
+      <Text  ml={2} overflowX={"hidden"}>{getTitle() ? getTitle() : "New chat"}</Text>
       {selectedId === id && (
         <BsTrash
           style={{ position: "absolute", right: 15, fontSize: "20px" }}

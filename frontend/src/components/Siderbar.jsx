@@ -3,6 +3,7 @@ import { Container, Text } from "@chakra-ui/react";
 import { IoIosAdd } from "react-icons/io";
 import Session from "./Session";
 import { BsTrash } from "react-icons/bs";
+import { Palette } from "../assets/palette";
 
 const Siderbar = ({
   sessions,
@@ -19,48 +20,55 @@ const Siderbar = ({
     return <div className="loading">Sidebar...</div>;
   }
 
-  const style = { color: "white", fontSize: "24px" };
+  const style = {fontSize: "24px" };
   return (
     <Container
       maxW={"20%"}
       display={"flex"}
       flexDirection={"column"}
-      bgColor={"rgb(32,33,35)"}
+      bgColor={Palette.dark}
       minH={"100vh"}
       left={0}
       top={0}
       m={0}
       px={1}
+      boxShadow={"2xl"}
     >
       <Container
         top={0}
-        border={"1px solid #d9d9e3"}
+        border={"1px solid "+Palette.white}
         borderRadius={"md"}
         my={8}
-        py={3}
+        w={"70%"}
+        py={4}
+        color={Palette.white}
         cursor={"pointer"}
         display={"flex"}
         flexWrap={"wrap"}
         flexDirection={"row"}
-        _hover={{ opacity: "0.75", brightness: "1.3" }}
+        transitionDuration={"0.2s"}
+        transitionTimingFunction={"ease-in-out"}
+        _hover={{ borderColor:Palette.dark,  w:"90%", bgColor: Palette.white, color: Palette.dark}}
         onClick={() => handleIdChange(null)}
+        boxShadow={"2xl"}
       >
         <IoIosAdd style={style} />
-        <Text color={"white"} ml={2}>
+        <Text ml={2} fontWeight={700}>
           New Chat
         </Text>
       </Container>
       <Container
         display={"flex"}
         flexDirection={"column"}
-        p={0}
+        px={0}
+        py={5}
         overflowY={"scroll"}
         sx={{
           "::-webkit-scrollbar": {
             width: "5px",
           },
           "::-webkit-scrollbar-track": {
-            background: "rgb(68,70,84)",
+            background: "rgb(108,110,124)",
           },
           "::-webkit-scrollbar-thumb": {
             background: "rgba(217,217,227,.8)",

@@ -5,6 +5,7 @@ import Siderbar from "./components/Siderbar";
 import ChatBox from "./components/ChatBox";
 import SplashScreen from "./components/SplashScreen";
 import HelpPage from "./components/Help";
+import { Palette } from "./assets/palette";
 
 function App() {
   const [selectedId, setSelectedId] = useState(null);
@@ -34,7 +35,7 @@ function App() {
       {/* <SplashScreen /> */}
       <HelpPage />
       <Container
-        bgColor={"rgb(52 53 65)"}
+        bgColor={Palette.lightGray}
         maxW={"100vw"}
         maxH={"100vh"}
         display={"flex"}

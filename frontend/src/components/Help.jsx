@@ -1,5 +1,6 @@
 import {Container, Box, Text} from "@chakra-ui/react"
 import React, {useState} from "react";
+import { Palette } from "../assets/palette";
 
 const InstructionList = [
     {
@@ -86,6 +87,7 @@ const HelpPage = () => {
     const [layerPos, setLayerPos] = useState(-3000)
     const [boxPos, setBoxPos] = useState(-3000)
     const [text, setText] = useState("?")
+    const [color, setColor] = useState(Palette.dark)
 
     return (
         <Container>
@@ -96,7 +98,9 @@ const HelpPage = () => {
                 position={"absolute"}
                 top={"8"}
                 right={"8"}
-                color={"#FFFFFF"}
+                color={color}
+                bgColor={"transparent"}
+                borderColor={color}
                 borderRadius={"15px"}
                 borderWidth={"3px"}
                 fontWeight={"bold"}
@@ -106,6 +110,7 @@ const HelpPage = () => {
                 }}
                 zIndex={6}
                 onClick={() => { 
+                    color === Palette.white ? setColor(Palette.dark) : setColor(Palette.white);
                     text === "?" ? setText("X") : setText("?");
                     layerPos === 0 ? setLayerPos(-3000) : setLayerPos(0);
                     boxPos === "20vw" ? setBoxPos(-3000) : setBoxPos("20vw");

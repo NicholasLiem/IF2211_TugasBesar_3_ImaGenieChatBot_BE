@@ -64,13 +64,15 @@ func MessageHandler(c *fiber.Ctx) error {
 	if len(userQueries) > 1 {
 		// Kalau misalnya dalam kalimat terdiri dari beberapa pertanyaan
 		var resultText string
+		count := 0
 		for index := range userQueries {
 			if userQueries[index] != "" {
 				resultingText, err := ResponseText(userQueries[index])
 				if err != nil {
 					return fiber.NewError(fiber.StatusBadRequest, "Fail to get answer response")
 				}
-				resultText = resultText + "Jawaban untuk pertanyaan no." + strconv.Itoa(index+1) + ": \n " + resultingText + " \n "
+				resultText = resultText + "Jawaban untuk pertanyaan No." + strconv.Itoa(count+1) + ": \n " + resultingText + " \n "
+				count++
 			}
 		}
 		if resultText == "" {
@@ -95,27 +97,27 @@ func MessageHandler(c *fiber.Ctx) error {
 }
 
 func isQAQuery(text string) bool {
-	r := regexp.MustCompile(`^(tambahkan|add|ubah|update|hapus|delete) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
+	r := regexp.MustCompile(`^[\s]*(tambahkan|add|ubah|update|hapus|delete)[\s]+pertanyaan[\s]+(?:(?P<question>.+?)(?:[\s]+dengan[\s]+jawaban[\s]+(?P<answer>.+))?)?[\s]*$`)
 	return r.MatchString(text)
 }
 
 func isMathQuery(text string) bool {
-	r := regexp.MustCompile(`^(hitunglah|berapakah)\s.+[0-9+\-*/().\s]+$`)
+	r := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)[\s]+.+[0-9+\-*/().\s]+[\s]*$`)
 	return r.MatchString(text)
 }
 
 func isDateQuery(text string) bool {
-	r := regexp.MustCompile(`^hari apakah tanggal (\d{1,2}\/\d{1,2}\/\d{4})\?$`)
+	r := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/\d{4})\?[\s]*$`)
 	return r.MatchString(text)
 }
 
 func isGameQuery(text string) bool {
-	r := regexp.MustCompile(`^mainkan suit dengan (\w+)$`)
+	r := regexp.MustCompile(`^[\s]*mainkan[\s]+suit[\s]+dengan[\s]+(\w+)[\s]*$`)
 	return r.MatchString(text)
 }
 
 func isRandomPickQuery(text string) bool {
-	r := regexp.MustCompile(`^pilih (\d+) dari ([\w\s]+)$`)
+	r := regexp.MustCompile(`^[\s]*pilih[\s]+(\d+)[\s]+dari[\s]+([\w\s]+)[\s]*$`)
 	return r.MatchString(text)
 }
 
@@ -138,7 +140,7 @@ func ResponseText(text string) (string, error) {
 		}
 	} else if isMathQuery(text) {
 		c := &calculator.Calculator{}
-		mathRegex := regexp.MustCompile(`^(hitunglah|berapakah)\s(.+)$`)
+		mathRegex := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)\s(.+)[\s]*$`)
 		match := mathRegex.FindStringSubmatch(text)
 		mathExpr := match[2]
 		c.InsertInput(mathExpr)
@@ -150,7 +152,7 @@ func ResponseText(text string) (string, error) {
 		}
 	} else if isDateQuery(text) {
 		d := &date.Date{}
-		dateRegex := regexp.MustCompile(`^hari apakah tanggal (\d{1,2}\/\d{1,2}\/\d{4})\?$`)
+		dateRegex := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/\d{4})\?[\s]*$`)
 		match := dateRegex.FindStringSubmatch(text)
 		dateString := match[1]
 		d.GetDayFromDate(dateString)
@@ -161,14 +163,14 @@ func ResponseText(text string) (string, error) {
 		}
 	} else if isGameQuery(text) {
 		rps := &extra.RPSGame{}
-		rpsRegex := regexp.MustCompile(`^mainkan suit dengan (\w+)$`)
+		rpsRegex := regexp.MustCompile(`^[\s]*mainkan[\s]+suit[\s]+dengan[\s]+(\w+)[\s]*$`)
 		match := rpsRegex.FindStringSubmatch(text)
 		inputString := match[1]
 		rps.PlayGame(inputString)
 		response = rps.GetMessage()
 	} else if isRandomPickQuery(text) {
 		rd := &extra.RandomPick{}
-		rdRegex := regexp.MustCompile(`^pilih (\d+) dari ([\w\s]+)$`)
+		rdRegex := regexp.MustCompile(`^[\s]*pilih[\s]+(\d+)[\s]+dari[\s]+([\w\s]+)[\s]*$`)
 		match := rdRegex.FindStringSubmatch(text)
 		amountString := match[1]
 		inputString := match[2]

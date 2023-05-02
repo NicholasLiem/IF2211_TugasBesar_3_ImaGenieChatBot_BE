@@ -1,7 +1,10 @@
 import React, { useRef } from "react";
-import { Container, Input, Text, Button, Stack, Radio, RadioGroup, Box, Wrap} from "@chakra-ui/react";
+import { Container, Input, Text, Button, Stack, Radio, RadioGroup, Box, Image, InputGroup} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
+import {CgProfile} from "react-icons/cg"
+import ImaGenieKelarImage from "../assets/genieProfile.png"
+import { Palette } from "../assets/palette";
 
 const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
   const [loading, setIsLoading] = useState(true);
@@ -101,7 +104,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
     setText("");
   };
   
-  const style = { fontSize: "1.5em", color: "white", marginBottom: 2 };
+  const style = { fontSize: "1.5em", color: "white"};
   return (
     <Container
       m={0}
@@ -113,17 +116,18 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
       flexWrap={"wrap"}
       maxW="100%"
       p={0}
+      boxShadow={"2xl"}
     >
       <Container
         display={"flex"}
-        // bgColor={"rgb(102 103 115)"}
+        // bgColor={Palette.white}
         flexDirection={"column"}
-        minW={"60%"}
-        mt={10}
+        minW={"80%"}
+        mt={5}
         px={5}
-        maxH={"80%"}
+        maxH={"75%"}
         overflowY={"scroll"}
-        sx={{
+        sx={{ 
           "::-webkit-scrollbar": {
             width: "5px",
           },
@@ -143,24 +147,38 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 display={"flex"}
                 flexDirection={"column"}
                 borderRadius={"lg"}
-                bgColor={"#9496A4"}
+                borderWidth={0}
                 color={"white"}
                 maxW="55%"
                 alignSelf={"flex-end"}
                 alignItems={"flex-end"}
-                py={8}
+                py={10}
                 px={10}
-                gap={2}
-                my={3}
+                gap={3}
                 tabIndex={index + 1}
-                transitionDuration={"0.8s"}
-                transitionTimingFunction={"ease-in-out"}
               >
-                <Text fontSize={"20px"} fontWeight={"bold"} left={0}>
-                    You:
-                </Text>
-                <Text fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"right"} mx="auto">
-                {message.text}{" "}
+                <Box 
+                shadow={"xl"}
+                display={"flex"}
+                flexDirection={"row"}
+                justifyContent={"center"}
+                borderWidth={0}
+                alignItems={"center"}
+                bg={Palette.white}
+                borderRadius={"30px"}>
+                    <Text pr={6} pl={10} fontSize={"20px"} fontWeight={"bold"} left={0} color={"black"} >
+                        You
+                    </Text>
+                    <Box bg={Palette.dark} borderRadius="30px" p={1.5} maxW="60px" h="auto">
+                        <CgProfile size={40} ngColor={"white"} />
+                    </Box>
+                </Box>
+                
+                <Text shadow={"xl"} color={"black"} borderRadius={"2xl"} py={6} px={10} bg={Palette.white} 
+                fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}
+                transitionDuration={"0.15s"} transitionTimingFunction={"ease-in-out"}
+                >
+                    {message.text}{" "}
                 </Text>
               </Box>
             );
@@ -170,24 +188,40 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 display={"flex"}
                 flexDirection={"column"}
                 borderRadius={"lg"}
-                bgColor={"#545664"}
                 color={"white"}
                 maxW="55%"
                 alignSelf={"flex-start"}
                 alignItems={"flex-start"}
-                py={8}
+                py={10}
                 px={10}
-                gap={2}
-                my={3}
+                gap={3}
                 tabIndex={index + 1}
-                transitionDuration={"0.8s"}
-                transitionTimingFunction={"ease-in-out"}
+                __focus={{
+                    borderWidth:"0px",
+                    borderColor:"transparent"
+                }}
               >
-                <Text fontSize={"20px"} fontWeight={"bold"} left={0}>
-                    ImaGenieKelar:
-                </Text>
-                <Text fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}>
-                  {message.text}{" "}
+                <Box 
+                display={"flex"}
+                shadow={"xl"}
+                flexDirection={"row"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                bg={Palette.blue}
+                borderRadius={"30px"}>
+                    <Box bg={Palette.dark} borderRadius="30px" p={1.5} maxW="60px" h="auto">
+                        <Image ngColor={"white"} src={ImaGenieKelarImage}  />
+                    </Box>
+                    <Text pl={6} pr={10} fontSize={"20px"} fontWeight={"bold"} left={0}>
+                        ImaGenieKelar
+                    </Text>
+                </Box>
+                
+                <Text shadow={"xl"} borderRadius={"2xl"} py={6} px={10} bg={Palette.blue} 
+                fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}
+                transitionDuration={"0.15s"} transitionTimingFunction={"ease-in-out"}
+                >
+                    {message.text}{" "}
                 </Text>
               </Box>
             );
@@ -195,58 +229,63 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         })}
       </Container>
 
-        <form onSubmit={handleSubmit} style={{width: "100%", justifyContent:"center", alignItems:"center", gap:"0"}}>
-            <RadioGroup marginRight={10} value={radioValue} justifySelf={"flex-start"}
-            borderWidth={"2px"} p={4} borderRadius={"xl"} bgColor={"#525260"} colorScheme="white"
-            onChange={() => {radioValue === "KMP" ? setRadioValue("BM") : setRadioValue("KMP")}} >
-                <Stack direction={"row"} gap={3}>
-                    <Radio size="md" value='KMP'> <Text color={"white"}>  KMP </Text> </Radio>
-                    <Radio size="md" value='BM'> <Text color={"white"}>  BM </Text> </Radio>
-                </Stack>
-            </RadioGroup>
-            
-            <Input
-            placeholder="Type your questions here..."
-            m={0}
-            w="30%"
-            py={6}
-            alignSelf={"center"}
-            bgColor={"rgb(64,65,79)"}
-            borderWidth={"2.5px"}
-            borderLeftRadius={"3xl"}
-            borderRightRadius={0}
-            borderRightWidth={"0.5px"}
-            color="white"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            transitionDuration={"0.2s"}
-            transitionTimingFunction={"ease-in-out"}
-            _focus={{
-                w:"60%",
-                transitionDuration:"0.2s",
-                transitionTimingFunction:"ease-in-out"
-            }}
-            />
-            <Button 
-            display={"flex"}
-            justifyContent={"center"}
-            alignItems={"center"}
-            style={style} type="submit"
-            py={6}
-            borderColor={"FFFFFF"}
-            borderWidth={"2.5px"}
-            borderLeftRadius={0}
-            borderRightRadius={"3xl"}
-            borderLeftWidth={0}
-            bgColor={"rgb(64,65,79)"}
-            pl={3}
-            pr={4}
-            _hover = {{
-                bgColor:"rgb(89,90,104)"
-            }}
-            >
-                <IoIosPaperPlane />
-            </Button>
+        <form onSubmit={handleSubmit} style={{width: "100%"}}>
+            <Box bg={"#BFC8CF"} w={"100%"} display={"flex"} flexDirection={"row"} 
+            justifyContent={"center"} alignItems={"center"} py={5}>
+
+                <RadioGroup marginRight={10} value={radioValue} justifySelf={"flex-start"}
+                borderWidth={"2px"} p={4} borderRadius={"xl"} bgColor={"#525260"} colorScheme="white"
+                onChange={() => {radioValue === "KMP" ? setRadioValue("BM") : setRadioValue("KMP")}} >
+                    <Stack direction={"row"} gap={3}>
+                        <Radio size="md" value='KMP'> <Text color={"white"}>  KMP </Text> </Radio>
+                        <Radio size="md" value='BM'> <Text color={"white"}>  BM </Text> </Radio>
+                    </Stack>
+                </RadioGroup>
+                
+                <Input
+
+                placeholder="Type your questions here..."
+                m={0}
+                w="60%"
+                maxH={"100%"}
+                py={6}
+                bgColor={"rgb(64,65,79)"}
+                borderColor={"#FFFFFF"}
+                borderWidth={"2.5px"}
+                borderLeftRadius={"3xl"}
+                borderRightRadius={0}
+                borderRightWidth={"0.5px"}
+                color="white"
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+
+                _focus={{
+                    borderColor:"#FFFFFF",
+                    borderWidth: "0"
+                }}
+                />
+                <Button 
+                display={"flex"}
+                justifyContent={"center"}
+                alignItems={"center"}
+                style={style} type="submit"
+                py={6}
+                borderColor={"#FFFFFF"}
+                borderWidth={"2.5px"}
+                borderLeftRadius={0}
+                borderRightRadius={"3xl"}
+                borderLeftWidth={0}
+                bgColor={"rgb(64,65,79)"}
+                pl={3}
+                pr={4}
+                _hover = {{
+                    bgColor:"rgb(89,90,104)"
+                }}
+                >
+                    <IoIosPaperPlane />
+                </Button>
+
+            </Box>
         </form>
     </Container>
   );
