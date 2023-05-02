@@ -17,6 +17,8 @@ type Calculator struct {
 	solution float64
 	errorMessage string
 	lastIsCP bool //CP = closing parenthesis
+	lastIsMinusNum bool // For minus that is in the value of a num
+	minusVal int 
 }
 
 func (c *Calculator) InsertInput(input string) {
@@ -37,6 +39,8 @@ func (c *Calculator) ResetCalculator(){
 	c.solution = 0
 	c.errorMessage = ""
 	c.lastIsCP = false
+	c.lastIsMinusNum = false
+	c.minusVal = 0
 }
 
 
@@ -123,6 +127,11 @@ func (c *Calculator) Calculate() {
 				} else {
 					// Case if the digit is not for after-comma value
 					c.currentVal = c.currentVal*10 + float64(digit)
+					if (c.lastIsMinusNum){
+						c.currentVal *= math.Pow(-1, float64(c.minusVal))
+						c.minusVal = 0
+						c.lastIsMinusNum = false
+					}
 				}
 				c.lastIsNum = true
 				c.lastIsCP = false
@@ -196,7 +205,10 @@ func (c *Calculator) Calculate() {
 				}
 			}
 		} else if (IsOperator((char))){
-			if (c.lastIsNum){
+			if (char == rune('-') && !c.lastIsNum){
+				c.lastIsMinusNum = true
+				c.minusVal++
+			} else if (c.lastIsNum){
 				c.GetCurrentValToDeque()
 				if (c.oDeque.IsEmpty()){
 					c.oDeque.InsertLast(char)
