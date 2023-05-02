@@ -208,7 +208,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
             <Input
             placeholder="Type your questions here..."
             m={0}
-            w="60%"
+            w="30%"
             py={6}
             alignSelf={"center"}
             bgColor={"rgb(64,65,79)"}
@@ -219,6 +219,13 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
             color="white"
             value={text}
             onChange={(e) => setText(e.target.value)}
+            transitionDuration={"0.2s"}
+            transitionTimingFunction={"ease-in-out"}
+            _focus={{
+                w:"60%",
+                transitionDuration:"0.2s",
+                transitionTimingFunction:"ease-in-out"
+            }}
             />
             <Button 
             display={"flex"}
