@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"math"
 	"sort"
 )
@@ -73,8 +72,6 @@ func Similarity(textOne, textTwo string) float64 {
 	maxLength := max(len(textOne), len(textTwo))
 	lenResult := 100 - 100*math.Abs(float64(len(textOne)-len(textTwo))/float64(maxLength))
 	levenshteinResult := (1 - float64(distance)/float64(maxLength)) * 100
-	fmt.Println(textOne + " " + textTwo)
-	fmt.Println(lenResult)
 	result := 0.2*lenResult + 0.8*levenshteinResult
 	return result
 }
