@@ -118,10 +118,10 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         display={"flex"}
         // bgColor={"rgb(102 103 115)"}
         flexDirection={"column"}
-        minW={"70%"}
+        minW={"60%"}
         mt={10}
         px={5}
-        h={"80%"}
+        maxH={"80%"}
         overflowY={"scroll"}
         sx={{
           "::-webkit-scrollbar": {
@@ -145,7 +145,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 borderRadius={"lg"}
                 bgColor={"#9496A4"}
                 color={"white"}
-                w="55%"
+                maxW="55%"
                 alignSelf={"flex-end"}
                 alignItems={"flex-end"}
                 py={8}
@@ -172,7 +172,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 borderRadius={"lg"}
                 bgColor={"#545664"}
                 color={"white"}
-                w="55%"
+                maxW="55%"
                 alignSelf={"flex-start"}
                 alignItems={"flex-start"}
                 py={8}
