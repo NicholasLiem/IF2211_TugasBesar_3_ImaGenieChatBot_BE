@@ -2,10 +2,10 @@
 
 ## 🤖 ImaGenieKelar Bot
 ```
-Simple ChatGPT using String Matching Algorithms and Regular Expression
+📢 "Simple ChatGPT using String Matching Algorithms and Regular Expression"
 ```
 
-## **Table of Contents**
+## **📜 Table of Contents**
 * [Program Description](#program-description)
 * [Required Program](#required-program)
 * [How to Run The Program](#how-to-run-the-program)
@@ -14,9 +14,9 @@ Simple ChatGPT using String Matching Algorithms and Regular Expression
 * [Folders and Files Description](#folders-and-files-description)
 * [Author](#author)
 
-## **Program Description**
+## ** 📄 Program Description**
 
-## **Required Program**
+## **🛠️ Required Program**
 | Required Program | Reference Link |
 |------------------|-------------|
 | Go (Golang)      | [Go (Golang)](https://go.dev/doc/install) |
@@ -26,7 +26,7 @@ Simple ChatGPT using String Matching Algorithms and Regular Expression
 | ReactJS          | [ReactJS](https://react.dev/) |
 | Chakra UI        | [ChakraUI](https://chakra-ui.com/) |
 
-## **How to Run The Program**
+## **💻 How to Run The Program**
 1. Clone this repo using this command
 
 ```sh
@@ -34,11 +34,11 @@ git clone https://github.com/Gulilil/Tucil3_13521008_13521116.git
 ```
 
 
-## **Implementation Screenshots**
+## **📷 Implementation Screenshots**
 
 [//]: # (<img src="docs/assets/.png">)
 
-## **Progress Report**
+## **📃 Progress Report**
 
 | Features                                        | Yes      | No |
 |-------------------------------------------------|----------|----|
@@ -50,11 +50,11 @@ git clone https://github.com/Gulilil/Tucil3_13521008_13521116.git
 | Play games with the bot                         | &check;  |    |
 
 
-## **Folders and Files Description**
+## **📂 Folders and Files Description**
 ```bash                             
 ```
 
-## **Author**
+## **👨‍💻 Author**
 | Name                      | Student ID | Role / Job Desk     |
 |---------------------------|------------|---------------------|
 | Juan Christopher Santoso  | 13521116   | Fullstack Developer |
