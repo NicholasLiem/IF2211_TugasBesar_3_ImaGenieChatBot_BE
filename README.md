@@ -27,11 +27,13 @@
 | Chakra UI        | [ChakraUI](https://chakra-ui.com/) |
 
 ## **💻 How to Run The Program**
-1. Clone this repo using this command
 
-```sh
-git clone https://github.com/Gulilil/Tucil3_13521008_13521116.git
-```
+[//]: # (1. Clone this repo using this command)
+
+[//]: # ()
+[//]: # (```sh)
+
+[//]: # (```)
 
 
 ## **📷 Implementation Screenshots**
