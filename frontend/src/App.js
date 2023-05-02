@@ -31,7 +31,7 @@ function App() {
 
   return (
     <div className="App">
-      {/* <SplashScreen /> */}
+      <SplashScreen />
       <HelpPage />
       <Container
         bgColor={"rgb(52 53 65)"}

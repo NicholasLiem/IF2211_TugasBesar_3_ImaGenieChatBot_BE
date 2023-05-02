@@ -14,7 +14,6 @@ import (
 	"strconv"
 	"strings"
 	"time"
-	"fmt"
 )
 
 func MessageHandler(c *fiber.Ctx) error {
@@ -149,16 +148,12 @@ func isDateQuery(text string) bool {
 }
 
 func isGameQuery(text string) bool {
-	fmt.Println(text)
 	r := regexp.MustCompile(`^mainkan suit dengan (\w+)$`)
-	fmt.Println(r.MatchString(text))
 	return r.MatchString(text)
 }
 
 func isRandomPickQuery(text string) bool {
-	fmt.Println(text)
 	r := regexp.MustCompile(`^pilih (\d+) dari ([\w\s]+)$`)
-	fmt.Println(r.MatchString(text))
 	return r.MatchString(text)
 }
 
