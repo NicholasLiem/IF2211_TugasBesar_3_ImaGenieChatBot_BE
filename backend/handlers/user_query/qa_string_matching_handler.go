@@ -18,7 +18,7 @@ func QAStringMatchingHandler(query string, patternType string) (string, error) {
 				return qa.Answer, nil
 			}
 		} else {
-			if utils.KnuthMorrisPrattMatch(query, qa.Question) != -1 {
+			if utils.KnuthMorrisPrattMatch(qa.Question, query) != -1 {
 				return qa.Answer, nil
 			}
 		}
