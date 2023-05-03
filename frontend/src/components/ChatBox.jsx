@@ -1,31 +1,39 @@
 import React, { useRef, Fragment } from "react";
-import { Container, Input, Text, Button, Stack, Radio, RadioGroup, Box, Image, InputGroup} from "@chakra-ui/react";
+import {
+  Container,
+  Input,
+  Text,
+  Button,
+  Stack,
+  Radio,
+  RadioGroup,
+  Box,
+  Image,
+} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
-import {CgProfile} from "react-icons/cg"
-import ImaGenieKelarImage from "../assets/genieProfile.png"
-import UserImage from "../assets/user.png"
+import ImaGenieKelarImage from "../assets/genieProfile.png";
+import UserImage from "../assets/user.png";
 import { Palette } from "../assets/palette";
+import { useGlobalContext } from "../context";
 
-const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
-  const [loading, setIsLoading] = useState(true);
+const ChatBox = ({ fetchSessions }) => {
+  // const [loading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const containerRef = useRef();
   const [radioValue, setRadioValue] = useState("KMP");
   const [text, setText] = useState("");
 
+  const { selectedId, setSelectedId } = useGlobalContext();
   const fetchMesagges = async () => {
-    setIsLoading(true);
     try {
       const response = await fetch(
         `http://localhost:5000/chat-sessions/${selectedId}/messages`
       );
       const data = await response.json();
       setMessages(data);
-      setIsLoading(false);
     } catch (error) {
       setMessages([]);
-      setIsLoading(false);
     }
   };
 
@@ -33,20 +41,13 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
     fetchMesagges();
   }, [selectedId]);
 
-    useEffect(() => {
-        containerRef.current?.lastChild?.focus();
-        const lastChild = containerRef.current?.lastChild;
-        lastChild && (lastChild.style.outline = "none");
-    }, [messages]);
-
-
-
-  if (loading) {
-    return ;
-  }
+  useEffect(() => {
+    containerRef.current?.lastChild?.focus();
+    const lastChild = containerRef.current?.lastChild;
+    lastChild && (lastChild.style.outline = "none");
+  }, [messages]);
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     if (selectedId) {
       try {
         await fetch(
@@ -63,7 +64,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
           }
         ).then((response) => response.json());
         fetchMesagges();
-        setIsLoading(false);
+        
       } catch (error) {
 
       }
@@ -99,20 +100,19 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
             setMessages(data);
           } catch (error) {
             setMessages([]);
-            setIsLoading(false);
+            
           }
-          setIsLoading(false);
+          
         } catch (error) {
 
         }
       } catch (error) {
-        setIsLoading(false);
       }
     }
     setText("");
   };
-  
-  const style = { fontSize: "1.5em", color: "white"};
+
+  const style = { fontSize: "1.5em", color: "white" };
   return (
     <Container
       m={0}
@@ -135,9 +135,9 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         px={5}
         maxH={"75%"}
         overflowY={"scroll"}
-        sx={{ 
+        sx={{
           "::-webkit-scrollbar": {
-            display:"none",
+            display: "none",
             width: "5px",
           },
           "::-webkit-scrollbar-track": {
@@ -149,7 +149,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         }}
         ref={containerRef}
       >
-          {messages.map((message, index) => {
+        {messages.map((message, index) => {
           if (message.sender === "user") {
             return (
               <Box
@@ -166,28 +166,63 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 gap={3}
                 tabIndex={index + 1}
               >
-                <Box 
-                shadow={"xl"}
-                display={"flex"}
-                flexDirection={"row"}
-                justifyContent={"center"}
-                borderWidth={0}
-                alignItems={"center"}
-                bg={Palette.white}
-                borderRadius={"30px"}>
-                    <Text pr={6} pl={10} fontSize={"20px"} fontWeight={"bold"} left={0} color={"black"} >
-                        You
-                    </Text>
-                    <Box bg={Palette.dark} borderRadius="30px" p={1} maxW="60px" h="auto">
-                        <Image ngColor={"white"} src={UserImage} objectFit="cover" w="100%" h="100%"></Image>
-                    </Box>
-                </Box>
-                
-                <Text shadow={"xl"} color={"black"} borderRadius={"2xl"} py={6} px={10} bg={Palette.white} 
-                fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}
-                transitionDuration={"0.15s"} transitionTimingFunction={"ease-in-out"}
+                <Box
+                  shadow={"xl"}
+                  display={"flex"}
+                  flexDirection={"row"}
+                  justifyContent={"center"}
+                  borderWidth={0}
+                  alignItems={"center"}
+                  bg={Palette.white}
+                  borderRadius={"30px"}
                 >
-                    {message.text.split('\n').map((line, i) => <Fragment key={i}>{line}<br/></Fragment>)}
+                  <Text
+                    pr={6}
+                    pl={10}
+                    fontSize={"20px"}
+                    fontWeight={"bold"}
+                    left={0}
+                    color={"black"}
+                  >
+                    You
+                  </Text>
+                  <Box
+                    bg={Palette.dark}
+                    borderRadius="30px"
+                    p={1}
+                    maxW="60px"
+                    h="auto"
+                  >
+                    <Image
+                      ngColor={"white"}
+                      src={UserImage}
+                      objectFit="cover"
+                      w="100%"
+                      h="100%"
+                    ></Image>
+                  </Box>
+                </Box>
+
+                <Text
+                  shadow={"xl"}
+                  color={"black"}
+                  borderRadius={"2xl"}
+                  py={6}
+                  px={10}
+                  bg={Palette.white}
+                  fontSize={"16px"}
+                  fontWeight={650}
+                  maxW={"100%"}
+                  textAlign={"left"}
+                  transitionDuration={"0.15s"}
+                  transitionTimingFunction={"ease-in-out"}
+                >
+                  {message.text.split("\n").map((line, i) => (
+                    <Fragment key={i}>
+                      {line}
+                      <br />
+                    </Fragment>
+                  ))}
                 </Text>
               </Box>
             );
@@ -206,96 +241,145 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 gap={3}
                 tabIndex={index + 1}
                 __focus={{
-                    outline : "none", 
+                  outline: "none",
                 }}
               >
-                <Box 
-                display={"flex"}
-                shadow={"xl"}
-                flexDirection={"row"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                bg={Palette.blue}
-                borderRadius={"30px"}>
-                    <Box bg={Palette.dark} borderRadius="30px" p={1.5} maxW="60px" h="auto">
-                        <Image ngColor={"white"} src={ImaGenieKelarImage}  />
-                    </Box>
-                    <Text pl={6} pr={10} fontSize={"20px"} fontWeight={"bold"} left={0}>
-                        ImaGenieKelar
-                    </Text>
-                </Box>
-                
-                <Text shadow={"xl"} borderRadius={"2xl"} py={6} px={10} bg={Palette.blue} 
-                fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}
-                transitionDuration={"0.15s"} transitionTimingFunction={"ease-in-out"}
+                <Box
+                  display={"flex"}
+                  shadow={"xl"}
+                  flexDirection={"row"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  bg={Palette.blue}
+                  borderRadius={"30px"}
                 >
-                    {message.text.split('\n').map((line, i) => <Fragment key={i}>{line}<br/></Fragment>)}
+                  <Box
+                    bg={Palette.dark}
+                    borderRadius="30px"
+                    p={1.5}
+                    maxW="60px"
+                    h="auto"
+                  >
+                    <Image ngColor={"white"} src={ImaGenieKelarImage} />
+                  </Box>
+                  <Text
+                    pl={6}
+                    pr={10}
+                    fontSize={"20px"}
+                    fontWeight={"bold"}
+                    left={0}
+                  >
+                    ImaGenieKelar
+                  </Text>
+                </Box>
+
+                <Text
+                  shadow={"xl"}
+                  borderRadius={"2xl"}
+                  py={6}
+                  px={10}
+                  bg={Palette.blue}
+                  fontSize={"16px"}
+                  fontWeight={650}
+                  maxW={"100%"}
+                  textAlign={"left"}
+                  transitionDuration={"0.15s"}
+                  transitionTimingFunction={"ease-in-out"}
+                >
+                  {message.text.split("\n").map((line, i) => (
+                    <Fragment key={i}>
+                      {line}
+                      <br />
+                    </Fragment>
+                  ))}
                 </Text>
               </Box>
             );
+          }else{
+            return <></>
           }
         })}
       </Container>
 
-        <form onSubmit={handleSubmit} style={{width: "100%",marginBottom:0}}>
-            <Box bg={"#BFC8CF"} w={"100%"} display={"flex"} flexDirection={"row"} 
-            justifyContent={"center"} alignItems={"center"} py={5}>
+      <form onSubmit={handleSubmit} style={{ width: "100%", marginBottom: 0 }}>
+        <Box
+          bg={"#BFC8CF"}
+          w={"100%"}
+          display={"flex"}
+          flexDirection={"row"}
+          justifyContent={"center"}
+          alignItems={"center"}
+          py={5}
+        >
+          <RadioGroup
+            marginRight={10}
+            value={radioValue}
+            justifySelf={"flex-start"}
+            borderWidth={"2px"}
+            p={4}
+            borderRadius={"xl"}
+            bgColor={"#525260"}
+            colorScheme="white"
+            onChange={() => {
+              radioValue === "KMP" ? setRadioValue("BM") : setRadioValue("KMP");
+            }}
+          >
+            <Stack direction={"row"} gap={3}>
+              <Radio size="md" value="KMP">
+                {" "}
+                <Text color={"white"}> KMP </Text>{" "}
+              </Radio>
+              <Radio size="md" value="BM">
+                {" "}
+                <Text color={"white"}> BM </Text>{" "}
+              </Radio>
+            </Stack>
+          </RadioGroup>
 
-                <RadioGroup marginRight={10} value={radioValue} justifySelf={"flex-start"}
-                borderWidth={"2px"} p={4} borderRadius={"xl"} bgColor={"#525260"} colorScheme="white"
-                onChange={() => {radioValue === "KMP" ? setRadioValue("BM") : setRadioValue("KMP")}} >
-                    <Stack direction={"row"} gap={3}>
-                        <Radio size="md" value='KMP'> <Text color={"white"}>  KMP </Text> </Radio>
-                        <Radio size="md" value='BM'> <Text color={"white"}>  BM </Text> </Radio>
-                    </Stack>
-                </RadioGroup>
-                
-                <Input
-
-                placeholder="Type your questions here..."
-                m={0}
-                w="60%"
-                maxH={"100%"}
-                py={6}
-                bgColor={"rgb(64,65,79)"}
-                borderColor={"#FFFFFF"}
-                borderWidth={"2.5px"}
-                borderLeftRadius={"3xl"}
-                borderRightRadius={0}
-                borderRightWidth={"0.5px"}
-                color="white"
-                value={text}
-                onChange={(e) => setText(e.target.value)}
-
-                _focus={{
-                    borderColor:"#FFFFFF",
-                    borderWidth: "0",
-                    outline: "none"
-                }}
-                />
-                <Button 
-                display={"flex"}
-                justifyContent={"center"}
-                alignItems={"center"}
-                style={style} type="submit"
-                py={6}
-                borderColor={"#FFFFFF"}
-                borderWidth={"2.5px"}
-                borderLeftRadius={0}
-                borderRightRadius={"3xl"}
-                borderLeftWidth={0}
-                bgColor={"rgb(64,65,79)"}
-                pl={3}
-                pr={4}
-                _hover = {{
-                    bgColor:"rgb(89,90,104)"
-                }}
-                >
-                    <IoIosPaperPlane />
-                </Button>
-
-            </Box>
-        </form>
+          <Input
+            placeholder="Type your questions here..."
+            m={0}
+            w="60%"
+            maxH={"100%"}
+            py={6}
+            bgColor={"rgb(64,65,79)"}
+            borderColor={"#FFFFFF"}
+            borderWidth={"2.5px"}
+            borderLeftRadius={"3xl"}
+            borderRightRadius={0}
+            borderRightWidth={"0.5px"}
+            color="white"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            _focus={{
+              borderColor: "#FFFFFF",
+              borderWidth: "0",
+              outline: "none",
+            }}
+          />
+          <Button
+            display={"flex"}
+            justifyContent={"center"}
+            alignItems={"center"}
+            style={style}
+            type="submit"
+            py={6}
+            borderColor={"#FFFFFF"}
+            borderWidth={"2.5px"}
+            borderLeftRadius={0}
+            borderRightRadius={"3xl"}
+            borderLeftWidth={0}
+            bgColor={"rgb(64,65,79)"}
+            pl={3}
+            pr={4}
+            _hover={{
+              bgColor: "rgb(89,90,104)",
+            }}
+          >
+            <IoIosPaperPlane />
+          </Button>
+        </Box>
+      </form>
     </Container>
   );
 };
