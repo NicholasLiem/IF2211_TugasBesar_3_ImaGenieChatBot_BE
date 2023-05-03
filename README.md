@@ -6,13 +6,13 @@
 ```
 
 ## **📜 Table of Contents**
-* [Program Description](#program-description)
-* [Required Program](#required-program)
-* [How to Run The Program](#how-to-run-the-program)
-* [Implementation Screenshots](#implementation-screenshots)
-* [Progress Report](#progress-report)
-* [Folders and Files Description](#folders-and-files-description)
-* [Author](#author)
+* [Program Description](#-program-description)
+* [Required Program](#%EF%B8%8F-required-program)
+* [How to Run The Program](#-how-to-run-the-program-local)
+* [Implementation Screenshots](#-implementation-screenshots)
+* [Progress Report](#-progress-report)
+* [Folders and Files Description](#-folders-and-files-description)
+* [Author](#-author)
 
 ## **📄 Program Description**
 In this assignment, the program is required to develop a simple ChatGPT application by applying the simplest QA approach. The search for the most similar question to the question given by the user is done using the Knuth-Morris-Pratt (KMP) and Boyer-Moore (BM) string matching algorithms. Regex is used to determine the format of the question. If there is no exact match between the user's question and the questions in the database through the KMP or BM algorithms, then the chatbot will use the most similar question with at least 90% similarity. If there is no question with a similarity above 90%, then the chatbot will provide a maximum of 3 options for the most similar questions to be selected by the user. The similarity calculation is calculated using Levenshtein Distance. This application should also have several features such as text questions, calculator, date feature, add question and answer to the database, and delete question from the database. The classification is done using regex and is classified like everyday language.
@@ -64,7 +64,57 @@ https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/
 
 
 ## **📂 Folders and Files Description**
-```bash                             
+```bash
+Backend
+├───algorithms
+│   ├───calculator
+|       ├───calculator.go
+|       └───deque.go
+│   ├───date
+|       ├───date.go
+│   └───utils
+|       ├───boyer_moore.go
+|       ├───knuth_morris_pratt.go
+|       └───levenshtein_distance.go
+├───cmd
+|   ├───main.go
+|   └───routes.go
+├───database
+|   └───database.go
+├───extra
+|   ├───random_pick.go
+|   └───rock_paper_scissor.go
+├───handlers
+│   ├───chat_session
+|       ├───create_chat_session.go
+|       ├───delete_chat_session.go
+|       └───get_chat_session.go
+│   ├───messages
+|       ├───get_chat_messages.go
+|       └───message_handler.go
+│   ├───query_utils
+|       ├───query_utils.go
+│   ├───question_answer
+|       └───get_qa.go
+│   └───user_query
+|       ├───qa_regex_handler.go
+|       └───qa_string_matching_handler.go
+├───models
+|   ├───message.go
+|   ├───question_answer.go
+|   └───session.go
+├───test
+|   ├───boyermoore_test.go
+|   ├───calculator_test.go
+|   ├───levenshtein_test.go
+|   ├───random_pick_test.go
+|   └───rps_test.go
+├───.air.toml
+├───.env
+├───docker-compose.yml
+├───Dockerfile
+├───go.mod
+└───go.sum
 ```
 
 ## **👨‍💻 Author**
