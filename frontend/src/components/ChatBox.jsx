@@ -213,7 +213,7 @@ useEffect(() => {
                   <Box
                     bg={Palette.dark}
                     borderRadius="30px"
-                    p={1}
+                    p={0}
                     maxW="60px"
                     h="auto"
                   >
