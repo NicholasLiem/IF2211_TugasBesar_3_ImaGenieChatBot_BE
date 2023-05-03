@@ -24,10 +24,12 @@ func QuestionAnswerClassifier(query string) (int, error) {
 		answer := strings.TrimSpace(match[3])
 
 		existingQuestionAnswer := models.QuestionAnswer{}
-		if question != "" {
+		if question != "" && answer != "" {
 			if err := database.DB.Db.Where("question = ?", question).First(&existingQuestionAnswer).Error; err != nil && !errors.Is(err, gorm.ErrRecordNotFound) {
 				return 0, err
 			}
+		} else {
+			return 0, errors.New("invalid query")
 		}
 
 		if strings.TrimSpace(match[1]) == "tambahkan" || strings.TrimSpace(match[1]) == "add" {

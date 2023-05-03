@@ -5,7 +5,7 @@ import Session from "./Session";
 import { Palette } from "../assets/palette";
 import { useGlobalContext } from "../context";
 
-const Siderbar = ({
+const Sidebar = ({
   sessions,
   fetchSessions,
 }) => {
@@ -78,4 +78,4 @@ const Siderbar = ({
   );
 };
 
-export default Siderbar;
+export default Sidebar;

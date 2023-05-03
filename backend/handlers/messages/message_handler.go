@@ -61,7 +61,7 @@ func MessageHandler(c *fiber.Ctx) error {
 
 	// Handle QA queries
 	message.Text = strings.ToLower(message.Text)
-	userQueries := strings.Split(message.Text, ".")
+	userQueries := strings.Split(message.Text, "|")
 	if len(userQueries) > 1 {
 		// Kalau misalnya dalam kalimat terdiri dari beberapa pertanyaan
 		var resultText string
@@ -72,7 +72,7 @@ func MessageHandler(c *fiber.Ctx) error {
 				if err != nil {
 					return fiber.NewError(fiber.StatusBadRequest, "Fail to get answer response")
 				}
-				resultText = resultText + "Answer for Question No." + strconv.Itoa(count+1) + ": \n " + resultingText + "\n\n"
+				resultText = resultText + "————————————————————————\n Answer for Question No." + strconv.Itoa(count+1) + ": \n ———————————————————————— \n " + resultingText + "\n\n"
 				count++
 			}
 		}
@@ -83,13 +83,13 @@ func MessageHandler(c *fiber.Ctx) error {
 		// Kalo misalnya kalimat terdiri dari 1 kalimat saja.
 		responseMessage.Text, err = ResponseText(message.Text, message.PatternType)
 		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, "Fail to get answer response")
+			responseMessage.Text = "Invalid query request, bad query syntax!"
 		}
 	}
 
 	// Insert bot message
 	if err := query_utils.InsertMessage(responseMessage); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to insert bot's message to database")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to insert bots message to database")
 	}
 	responseMessage.CreatedAt = time.Now()
 	// Return response message
@@ -102,14 +102,9 @@ func isQAQuery(text string) bool {
 }
 
 func isMathQuery(text string) bool {
-	r := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)[\s]+[0-9+\-*/().\s]+[\s]*$`)
+	r := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)[\s]+[0-9+\-*/().^\s]+[\s]*$`)
 	return r.MatchString(text)
 }
-
-//func isSpaceQuery(text string) bool {
-//	r := regexp.MustCompile(`(\s)+`)
-//	return r.MatchString(text)
-//}
 
 func isDateQuery(text string) bool {
 	r := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/[\d]+)[\?]*[\s]*$`)
@@ -141,7 +136,7 @@ func ResponseText(text string, patternType string) (string, error) {
 		case user_query.SuccessDelete:
 			response = "Question deleted successfully"
 		default:
-			return "", fiber.NewError(fiber.StatusBadRequest, "Invalid query")
+			response = "Fail to add/edit/delete question because of bad syntax!"
 		}
 	} else if isMathQuery(text) {
 		c := &calculator.Calculator{}

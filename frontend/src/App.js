@@ -1,7 +1,7 @@
 import React, {useEffect, useState } from "react";
 import "./static/App.css";
 import { Container} from "@chakra-ui/react";
-import Siderbar from "./components/Siderbar";
+import Sidebar from "./components/Sidebar";
 import ChatBox from "./components/ChatBox";
 import SplashScreen from "./components/SplashScreen";
 import HelpPage from "./components/Help";
@@ -34,7 +34,7 @@ function App() {
         p={0}
         m={0}
       >
-        <Siderbar
+        <Sidebar
           sessions={sessions}
           fetchSessions={fetchSessions}
         />

@@ -66,7 +66,7 @@ useEffect(() => {
         fetchMesagges();
         
       } catch (error) {
-
+            console.log(error)
       }
     } else {
       let id = null;
@@ -100,13 +100,14 @@ useEffect(() => {
             setMessages(data);
           } catch (error) {
             setMessages([]);
-            
+            console.log(error)
           }
           
         } catch (error) {
-
+            console.log(error)
         }
       } catch (error) {
+          console.log(error)
       }
     }
     setText("");
