@@ -1,25 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Container, Text } from "@chakra-ui/react";
 import { IoIosAdd } from "react-icons/io";
 import Session from "./Session";
-import { BsTrash } from "react-icons/bs";
 import { Palette } from "../assets/palette";
+import { useGlobalContext } from "../context";
 
 const Siderbar = ({
   sessions,
-  isLoading,
-  selectedId,
   fetchSessions,
-  setSelectedId,
 }) => {
-  const handleIdChange = (id) => {
-    setSelectedId(id);
-  };
-
-  if (isLoading) {
-    return;
-  }
-
+  const {setSelectedId} = useGlobalContext()
   const style = {fontSize: "24px" };
   return (
     <Container
@@ -49,7 +39,7 @@ const Siderbar = ({
         transitionDuration={"0.2s"}
         transitionTimingFunction={"ease-in-out"}
         _hover={{ borderColor:Palette.dark,  w:"90%", bgColor: Palette.white, color: Palette.dark}}
-        onClick={() => handleIdChange(null)}
+        onClick={() => setSelectedId(null)}
         boxShadow={"2xl"}
       >
         <IoIosAdd style={style} />
@@ -78,9 +68,7 @@ const Siderbar = ({
         {sessions.map((item) => {
           return (
             <Session
-              selectedId={selectedId}
               id={item.id}
-              setSelectedId={handleIdChange}
               fetchSessions = {fetchSessions}
             />
           );
