@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
 import {CgProfile} from "react-icons/cg"
 import ImaGenieKelarImage from "../assets/genieProfile.png"
+import UserImage from "../assets/user.png"
 import { Palette } from "../assets/palette";
 
 const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
@@ -177,8 +178,8 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                     <Text pr={6} pl={10} fontSize={"20px"} fontWeight={"bold"} left={0} color={"black"} >
                         You
                     </Text>
-                    <Box bg={Palette.dark} borderRadius="30px" p={1.5} maxW="60px" h="auto">
-                        <CgProfile size={40} ngColor={"white"} />
+                    <Box bg={Palette.dark} borderRadius="30px" p={1} maxW="60px" h="auto">
+                        <Image ngColor={"white"} src={UserImage} objectFit="cover" w="100%" h="100%"></Image>
                     </Box>
                 </Box>
                 
