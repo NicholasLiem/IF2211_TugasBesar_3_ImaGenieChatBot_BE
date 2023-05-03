@@ -36,3 +36,16 @@
     transform: rotate(360deg);
   }
 }
+
+form{
+position: absolute;
+  bottom: 0;
+  width: 60vw;
+  margin-bottom:2em;
+  display: flex;
+  flex-direction: row;
+}
+
+#textarea{
+    max-height: 50px;
+}

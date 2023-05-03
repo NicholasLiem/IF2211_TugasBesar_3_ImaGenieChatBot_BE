@@ -18,7 +18,10 @@ services:
     command: air -c .air.toml
     environment:
       - CGO_ENABLED=0
+      - DB_HOST=${DB_HOST}
       - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_NAME=${DB_NAME}
     depends_on:
       - db
   db:

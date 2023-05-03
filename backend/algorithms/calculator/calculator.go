@@ -1,15 +1,15 @@
 package calculator
 
 import (
-	// "fmt"
+	"fmt"
 	"math"
 	"strconv"
 )
 
 type Calculator struct {
 	input string
-	nStack *NumberStack
-	oStack *OperatorStack
+	nDeque *NumberDeque
+	oDeque *OperatorDeque
 	lastIsNum bool
 	currentVal float64
 	commaVal int
@@ -17,6 +17,8 @@ type Calculator struct {
 	solution float64
 	errorMessage string
 	lastIsCP bool //CP = closing parenthesis
+	lastIsMinusNum bool // For minus that is in the value of a num
+	minusVal int 
 }
 
 func (c *Calculator) InsertInput(input string) {
@@ -26,10 +28,10 @@ func (c *Calculator) InsertInput(input string) {
 
 
 func (c *Calculator) ResetCalculator(){
-	c.nStack = &NumberStack{}
-	c.oStack = &OperatorStack{}
-	c.nStack.Reset()
-	c.oStack.Reset()
+	c.nDeque = &NumberDeque{}
+	c.oDeque = &OperatorDeque{}
+	c.nDeque.Reset()
+	c.oDeque.Reset()
 	c.lastIsNum = false
 	c.currentVal = 0
 	c.commaVal = 0
@@ -37,6 +39,8 @@ func (c *Calculator) ResetCalculator(){
 	c.solution = 0
 	c.errorMessage = ""
 	c.lastIsCP = false
+	c.lastIsMinusNum = false
+	c.minusVal = 0
 }
 
 
@@ -96,9 +100,9 @@ func Operate(a float64, b rune, c float64) (float64, bool) {
 	}
 }
 
-func (c *Calculator) GetCurrentValToStack() {
+func (c *Calculator) GetCurrentValToDeque() {
 	c.commaVal = 0
-	c.nStack.Push(c.currentVal)
+	c.nDeque.InsertLast(c.currentVal)
 	c.currentVal = 0
 }
 
@@ -111,6 +115,7 @@ func (c *Calculator) Calculate() {
 	c.ResetCalculator()
 	// Reading and calculate input
 	for _, char := range c.input{
+		// Number
 		if (IsOperand(char)){
 			if (!c.lastIsCP){
 				str := string(char)
@@ -121,7 +126,12 @@ func (c *Calculator) Calculate() {
 					c.commaVal++
 				} else {
 					// Case if the digit is not for after-comma value
-					c.currentVal += c.currentVal*10 + float64(digit)
+					c.currentVal = c.currentVal*10 + float64(digit)
+					if (c.lastIsMinusNum){
+						c.currentVal *= math.Pow(-1, float64(c.minusVal))
+						c.minusVal = 0
+						c.lastIsMinusNum = false
+					}
 				}
 				c.lastIsNum = true
 				c.lastIsCP = false
@@ -150,14 +160,14 @@ func (c *Calculator) Calculate() {
 					}
 				} else {
 					c.commaVal = 0
-					c.oStack.Push(char)
+					c.oDeque.InsertLast(char)
 					c.lastIsNum = false
 					c.lastIsCP = false
 				}
 			} else if (char == rune(')')){
 				if (!c.lastIsNum){
 					// () is still allowable
-					if !c.oStack.IsEmpty() && c.oStack.Top() == rune('('){
+					if !c.oDeque.IsEmpty() && c.oDeque.Top() == rune('('){
 						c.SetInvalid("Invalid input, empty parenthesis detected.")
 						break
 					}  else {
@@ -167,26 +177,26 @@ func (c *Calculator) Calculate() {
 				} else {
 					// Case handling for cases like (5), (((7.568)))
 					// If there is operation between "(" and ")", then these steps will be skipped
-					c.GetCurrentValToStack()
-					for (!c.oStack.IsEmpty() && c.oStack.Top() != rune('(')) {
-						int1 := c.nStack.Pop()
-						int2 := c.nStack.Pop()
-						op := c.oStack.Pop()
+					c.GetCurrentValToDeque()
+					for (!c.oDeque.IsEmpty() && c.oDeque.Top() != rune('(')) {
+						int1 := c.nDeque.DeleteLast()
+						int2 := c.nDeque.DeleteLast()
+						op := c.oDeque.DeleteLast()
 						res, valid := Operate(int2, op, int1)
 						if (!valid) {
 							c.SetInvalid("Invalid input, division by 0 detected.")
 							break
 						} else {
 							// Works as if the all between parenthesis is somesort of number
-							c.nStack.Push(res)
+							c.nDeque.InsertLast(res)
 						}
 					}
-					if (c.oStack.IsEmpty()){
+					if (c.oDeque.IsEmpty()){
 						c.SetInvalid("Invalid input, extra closing parenthesis detected.")
 						break
 					} else {
-						c.oStack.Pop()
-						c.currentVal = c.nStack.Pop()
+						c.oDeque.DeleteLast()
+						c.currentVal = c.nDeque.DeleteLast()
 					}
 
 					// Ini memang sengaja dibikin tetap c.lastIsNum = true
@@ -195,27 +205,30 @@ func (c *Calculator) Calculate() {
 				}
 			}
 		} else if (IsOperator((char))){
-			if (c.lastIsNum){
-				c.GetCurrentValToStack()
-				if (c.oStack.IsEmpty()){
-					c.oStack.Push(char)
+			if (char == rune('-') && !c.lastIsNum){
+				c.lastIsMinusNum = true
+				c.minusVal++
+			} else if (c.lastIsNum){
+				c.GetCurrentValToDeque()
+				if (c.oDeque.IsEmpty()){
+					c.oDeque.InsertLast(char)
 				} else {
-					if (Precedence(char) >= Precedence(c.oStack.Top())){
-						c.oStack.Push(char)
+					if (Precedence(char) >= Precedence(c.oDeque.Top())){
+						c.oDeque.InsertLast(char)
 					} else {
-						for (!c.oStack.IsEmpty() && (Precedence(char) < Precedence(c.oStack.Top())) ){
-							int1 := c.nStack.Pop()
-							int2 := c.nStack.Pop()
-							op := c.oStack.Pop()
+						for (!c.oDeque.IsEmpty() && (Precedence(char) < Precedence(c.oDeque.Top())) ){
+							int1 := c.nDeque.DeleteLast()
+							int2 := c.nDeque.DeleteLast()
+							op := c.oDeque.DeleteLast()
 							res, valid := Operate(int2, op, int1)
 							if (!valid) {
 								c.SetInvalid("Invalid input, division by 0 detected.")
 								break
 							} else {
-								c.nStack.Push(res)
+								c.nDeque.InsertLast(res)
 							}
 						}
-						c.oStack.Push(char)
+						c.oDeque.InsertLast(char)
 					}
 				}
 				c.lastIsNum = false
@@ -233,8 +246,9 @@ func (c *Calculator) Calculate() {
 
 		// Only for testing
 		// fmt.Println("curChar: ", string(char))
-		// c.nStack.Display()
-		// c.oStack.Display()
+		// fmt.Print("nDeque: "); c.nDeque.Display()
+		// fmt.Print("oDeque: "); c.oDeque.Display()
+		// fmt.Print("currentVal: "); c.DisplayCurrentVal()
 	}
 
 	// Calculate the rest after the reading input is finished
@@ -243,19 +257,31 @@ func (c *Calculator) Calculate() {
 		if (!c.lastIsNum){
 			c.SetInvalid("Invalid input, equation is ended by operator detected.")
 		} else {
-			c.GetCurrentValToStack()
-			for (!c.oStack.IsEmpty()){
-				if (c.nStack.nEff >= 2){
-					int1 := c.nStack.Pop()
-					int2 := c.nStack.Pop()
-					op := c.oStack.Pop()
-					res, valid := Operate(int2, op, int1)
-					if (!valid) {
-						c.SetInvalid("Invalid input, division by 0 detected.")
-						break
+			c.GetCurrentValToDeque()
+			// fmt.Print("nDeque: "); c.nDeque.Display()
+			// fmt.Print("oDeque: "); c.oDeque.Display()
+			// fmt.Print("currentVal: "); c.DisplayCurrentVal()
+			for (!c.oDeque.IsEmpty()){
+				if (c.nDeque.nEff >= 2){
+					if (!c.IsAllSamePrecedence()){
+						int1 := c.nDeque.DeleteLast()
+						int2 := c.nDeque.DeleteLast()
+						op := c.oDeque.DeleteLast()
+						res, valid := Operate(int2, op, int1)
+						if (!valid) {
+							c.SetInvalid("Invalid input, division by 0 detected.")
+							break
+						} else {
+							c.nDeque.InsertLast(res)
+						}
 					} else {
-						c.nStack.Push(res)
+						int1 := c.nDeque.DeleteFirst()
+						int2 := c.nDeque.DeleteFirst()
+						op := c.oDeque.DeleteFirst()
+						res, _ := Operate(int1, op, int2)
+						c.nDeque.InsertFirst(res)
 					}
+
 				} else {
 					c.SetInvalid("Invalid input, extra opening parenthesis detected.")
 					break
@@ -265,7 +291,7 @@ func (c *Calculator) Calculate() {
 	
 		// Save the result if still valid
 		if (c.valid){
-			c.solution = c.nStack.Top()
+			c.solution = c.nDeque.Top()
 		}
 	}
 	
@@ -285,4 +311,18 @@ func (c *Calculator) GetErrorMessage() string {
 
 func (c *Calculator) GetSolution() float64 {
 	return c.solution
+}
+
+func (c *Calculator) DisplayCurrentVal(){
+	fmt.Println(c.currentVal)
+}
+
+func (c *Calculator) IsAllSamePrecedence() bool {
+	prec := Precedence(c.oDeque.Top())
+	for _, o := range c.oDeque.buffer {
+		if (Precedence(o) != prec){
+			return false
+		}
+	}
+	return true
 }

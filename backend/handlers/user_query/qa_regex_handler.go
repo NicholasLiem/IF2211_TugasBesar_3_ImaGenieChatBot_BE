@@ -10,9 +10,11 @@ import (
 )
 
 const (
-	SuccessAdd    = 1
-	SuccessUpdate = 2
-	SuccessDelete = 3
+	FailToFindQuestion = -1
+	FailQAMissing      = -2
+	SuccessAdd         = 1
+	SuccessUpdate      = 2
+	SuccessDelete      = 3
 )
 
 func QuestionAnswerClassifier(query string) (int, error) {
@@ -36,7 +38,7 @@ func QuestionAnswerClassifier(query string) (int, error) {
 				Answer:   answer,
 			}
 			if newQuestionAnswer.Question == "" || newQuestionAnswer.Answer == "" {
-				return 0, errors.New("question and answer fields are required")
+				return -2, errors.New("question and answer fields are required")
 			}
 			if existingQuestionAnswer.ID != 0 {
 				existingQuestionAnswer.Answer = newQuestionAnswer.Answer
@@ -52,7 +54,7 @@ func QuestionAnswerClassifier(query string) (int, error) {
 			}
 		} else if strings.TrimSpace(match[1]) == "ubah" || strings.TrimSpace(match[1]) == "update" {
 			if existingQuestionAnswer.ID == 0 {
-				return 0, errors.New("question not found")
+				return -1, errors.New("question not found")
 			}
 			existingQuestionAnswer.Answer = answer
 			if err := database.DB.Db.Save(&existingQuestionAnswer).Error; err != nil {
@@ -61,7 +63,7 @@ func QuestionAnswerClassifier(query string) (int, error) {
 			return SuccessUpdate, nil
 		} else if strings.TrimSpace(match[1]) == "hapus" || strings.TrimSpace(match[1]) == "delete" {
 			if existingQuestionAnswer.ID == 0 {
-				return 0, errors.New("question not found")
+				return -1, errors.New("question not found")
 			}
 			if err := database.DB.Db.Delete(&existingQuestionAnswer).Error; err != nil {
 				return 0, err

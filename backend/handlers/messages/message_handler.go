@@ -4,6 +4,7 @@ import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/algorithms/calculator"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/algorithms/date"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/database"
+	"github.com/NicholasLiem/Tubes3_ImagineKelar/extra"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/query_utils"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/user_query"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/models"
@@ -43,9 +44,10 @@ func MessageHandler(c *fiber.Ctx) error {
 
 	// Insert user message
 	userMessage := models.Message{
-		SessionID: sessionID,
-		Sender:    "user",
-		Text:      message.Text,
+		SessionID:   sessionID,
+		Sender:      "user",
+		PatternType: message.PatternType,
+		Text:        message.Text,
 	}
 	if err := query_utils.InsertMessage(userMessage); err != nil {
 		return fiber.NewError(fiber.StatusInternalServerError, "Failed to insert user's message to database")
@@ -59,57 +61,32 @@ func MessageHandler(c *fiber.Ctx) error {
 
 	// Handle QA queries
 	message.Text = strings.ToLower(message.Text)
-	if isQAQuery(message.Text) {
-		result, err := user_query.QuestionAnswerClassifier(message.Text)
-		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
+	userQueries := strings.Split(message.Text, "|")
+	if len(userQueries) > 1 {
+		// Kalau misalnya dalam kalimat terdiri dari beberapa pertanyaan
+		var resultText string
+		count := 0
+		for index := range userQueries {
+			if userQueries[index] != "" {
+				resultingText, err := ResponseText(userQueries[index], message.PatternType)
+				if err != nil {
+					return fiber.NewError(fiber.StatusBadRequest, "Fail to get answer response")
+				}
+				resultText = resultText + "————————————————————————\n Answer for Question No." + strconv.Itoa(count+1) + ": \n ———————————————————————— \n " + resultingText + "\n\n"
+				count++
+			}
 		}
-
-		switch result {
-		case user_query.SuccessAdd:
-			responseMessage.Text = "Question added successfully"
-		case user_query.SuccessUpdate:
-			responseMessage.Text = "Question updated successfully"
-		case user_query.SuccessDelete:
-			responseMessage.Text = "Question deleted successfully"
-		default:
-			return fiber.NewError(fiber.StatusBadRequest, "Invalid query")
-		}
-	} else if isMathQuery(message.Text) {
-		c := &calculator.Calculator{}
-		mathRegex := regexp.MustCompile(`^(hitunglah|berapakah)\s(.+)$`)
-		match := mathRegex.FindStringSubmatch(message.Text)
-		mathExpr := match[2]
-		c.InsertInput(mathExpr)
-		c.Calculate()
-		if c.IsValid() {
-			responseMessage.Text = strconv.FormatFloat(c.GetSolution(), 'f', 2, 64)
-		} else {
-			responseMessage.Text = "Terdapat kesalahan notasi matematis"
-		}
-	} else if isDateQuery(message.Text) {
-		d := &date.Date{}
-		dateRegex := regexp.MustCompile(`^hari apakah tanggal (\d{2}\/\d{2}\/\d{4})\?$`)
-		match := dateRegex.FindStringSubmatch(message.Text)
-		dateString := match[1]
-		d.GetDayFromDate(dateString)
-		if d.Valid {
-			responseMessage.Text = d.GetDateResult()
-		} else {
-			responseMessage.Text = "Tanggal tidak dapat dibaca, mungkin kesalahan penulisan"
-		}
+		// Menghilangkan \n\n dari akhir kalimat
+		resultText = strings.TrimSuffix(resultText, "\n\n")
+		responseMessage.Text = resultText
 	} else {
-		// Handle regular queries
-		response, err := user_query.QAStringMatchingHandler(message.Text)
-		if err != nil {
-			return fiber.NewError(fiber.StatusBadRequest, err.Error())
-		}
-		responseMessage.Text = response
+		// Kalo misalnya kalimat terdiri dari 1 kalimat saja.
+		responseMessage.Text, err = ResponseText(message.Text, message.PatternType)
 	}
 
 	// Insert bot message
 	if err := query_utils.InsertMessage(responseMessage); err != nil {
-		return fiber.NewError(fiber.StatusInternalServerError, "Failed to insert bot's message to database")
+		return fiber.NewError(fiber.StatusInternalServerError, "Failed to insert bots message to database")
 	}
 	responseMessage.CreatedAt = time.Now()
 	// Return response message
@@ -117,16 +94,93 @@ func MessageHandler(c *fiber.Ctx) error {
 }
 
 func isQAQuery(text string) bool {
-	r := regexp.MustCompile(`^(tambahkan|add|ubah|update|hapus|delete) pertanyaan (?:(?P<question>.+?)(?: dengan jawaban (?P<answer>.+))?)?$`)
+	r := regexp.MustCompile(`^[\s]*(tambahkan|add|ubah|update|hapus|delete)[\s]+pertanyaan[\s]+(?:(?P<question>.+?)(?:[\s]+dengan[\s]+jawaban[\s]+(?P<answer>.+))?)?[\s]*$`)
 	return r.MatchString(text)
 }
 
 func isMathQuery(text string) bool {
-	r := regexp.MustCompile(`^(hitunglah|berapakah)\s.+[0-9+\-*/().\s]+$`)
+	r := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)[\s]+[0-9+\-*/().^\s]+[\s]*$`)
 	return r.MatchString(text)
 }
 
 func isDateQuery(text string) bool {
-	r := regexp.MustCompile(`^hari apakah tanggal (\d{2}\/\d{2}\/\d{4})\?$`)
+	r := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/[\d]+)[\?]*[\s]*$`)
 	return r.MatchString(text)
+}
+
+func isGameQuery(text string) bool {
+	r := regexp.MustCompile(`^[\s]*mainkan[\s]+suit[\s]+dengan[\s]+(\w+)[\s]*$`)
+	return r.MatchString(text)
+}
+
+func isRandomPickQuery(text string) bool {
+	r := regexp.MustCompile(`^[\s]*pilih[\s]+(\d+)[\s]+dari[\s]+([\w\s]+)[\s]*$`)
+	return r.MatchString(text)
+}
+
+func ResponseText(text string, patternType string) (string, error) {
+	var response string
+	if isQAQuery(text) {
+		result, _ := user_query.QuestionAnswerClassifier(text)
+		switch result {
+		case user_query.FailQAMissing:
+			response = "Question or Question cannot be nothing"
+		case user_query.FailToFindQuestion:
+			response = "Unable to find the question in database"
+		case user_query.SuccessAdd:
+			response = "Question added successfully"
+		case user_query.SuccessUpdate:
+			response = "Question updated successfully"
+		case user_query.SuccessDelete:
+			response = "Question deleted successfully"
+		default:
+			response = "Fail to add/edit/delete question because of bad syntax!"
+		}
+	} else if isMathQuery(text) {
+		c := &calculator.Calculator{}
+		mathRegex := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)\s(.+)[\s]*$`)
+		match := mathRegex.FindStringSubmatch(text)
+		mathExpr := match[2]
+		c.InsertInput(mathExpr)
+		c.Calculate()
+		if c.IsValid() {
+			response = strconv.FormatFloat(c.GetSolution(), 'f', 2, 64)
+		} else {
+			response = c.GetErrorMessage()
+		}
+	} else if isDateQuery(text) {
+		d := &date.Date{}
+		dateRegex := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/[\d]+)[\?]*[\s]*$`)
+		match := dateRegex.FindStringSubmatch(text)
+		dateString := match[1]
+		d.GetDayFromDate(dateString)
+		if d.Valid {
+			response = d.GetDateResult()
+		} else {
+			response = d.GetErrorMessage()
+		}
+	} else if isGameQuery(text) {
+		rps := &extra.RPSGame{}
+		rpsRegex := regexp.MustCompile(`^[\s]*mainkan[\s]+suit[\s]+dengan[\s]+(\w+)[\s]*$`)
+		match := rpsRegex.FindStringSubmatch(text)
+		inputString := match[1]
+		rps.PlayGame(inputString)
+		response = rps.GetMessage()
+	} else if isRandomPickQuery(text) {
+		rd := &extra.RandomPick{}
+		rdRegex := regexp.MustCompile(`^[\s]*pilih[\s]+(\d+)[\s]+dari[\s]+([\w\s]+)[\s]*$`)
+		match := rdRegex.FindStringSubmatch(text)
+		amountString := match[1]
+		inputString := match[2]
+		rd.Pick(amountString, inputString)
+		response = rd.GetMessage()
+	} else {
+		// Handle regular queries
+		queryResponse, err := user_query.QAStringMatchingHandler(text, patternType)
+		if err != nil {
+			return "", fiber.NewError(fiber.StatusBadRequest, err.Error())
+		}
+		response = queryResponse
+	}
+	return response, nil
 }

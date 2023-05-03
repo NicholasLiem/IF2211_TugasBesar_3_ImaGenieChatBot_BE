@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/chat_session"
-	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/home"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/messages"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/question_answer"
 	"github.com/gofiber/fiber/v2"
@@ -10,7 +9,6 @@ import (
 
 func setupRoutes(app *fiber.App) {
 
-	app.Get("/", home.GetHome)
 	// Chat sessions
 	app.Post("/chat-sessions", chat_session.CreateChatSession)
 	app.Delete("/chat-sessions/:session_id", chat_session.DeleteChatSession)
