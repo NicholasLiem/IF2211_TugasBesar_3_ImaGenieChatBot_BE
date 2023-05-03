@@ -4,6 +4,7 @@ import (
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/algorithms/utils"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/handlers/query_utils"
 	"github.com/NicholasLiem/Tubes3_ImagineKelar/models"
+	"strconv"
 )
 
 func QAStringMatchingHandler(query string, patternType string) (string, error) {
@@ -49,12 +50,20 @@ func QAStringMatchingHandler(query string, patternType string) (string, error) {
 		}
 	}
 
-	similarQuestions := ""
-	for _, s := range similarities {
-		similarQuestions += s.Question + "\n"
+	var similarQuestions string
+	for i, s := range similarities {
+		if i == 0 {
+			similarQuestions += strconv.Itoa(i+1) + ". " + s.Question
+		} else {
+			similarQuestions += "\n" + strconv.Itoa(i+1) + ". " + s.Question
+		}
 	}
 
-	return "Sorry, I couldn't find the answer to your question. Here are some similar questions: \n" + similarQuestions, nil
+	if len(similarities) > 0 {
+		return "Sorry, I couldn't find the answer to your question. Here are some similar questions: \n" + similarQuestions, nil
+	} else {
+		return "Sorry, I couldn't find the answer to your question.", nil
+	}
 }
 
 func getAnswerFromQuestion(q string, ans []models.QuestionAnswer) string {
