@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, Fragment } from "react";
 import { Container, Input, Text, Button, Stack, Radio, RadioGroup, Box, Image, InputGroup} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
@@ -32,9 +32,14 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
     fetchMesagges();
   }, [selectedId]);
 
-  useEffect(() => {
-    containerRef.current?.lastChild?.focus();
-  }, [messages]);
+    useEffect(() => {
+        containerRef.current?.lastChild?.focus();
+        const lastChild = containerRef.current?.lastChild;
+        lastChild && (lastChild.style.outline = "none");
+    }, [messages]);
+
+
+
   if (loading) {
     return <div className="loading">Chatbox....</div>;
   }
@@ -140,7 +145,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         }}
         ref={containerRef}
       >
-        {messages.map((message, index) => {
+          {messages.map((message, index) => {
           if (message.sender === "user") {
             return (
               <Box
@@ -178,7 +183,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}
                 transitionDuration={"0.15s"} transitionTimingFunction={"ease-in-out"}
                 >
-                    {message.text}{" "}
+                    {message.text.split('\n').map((line, i) => <Fragment key={i}>{line}<br/></Fragment>)}
                 </Text>
               </Box>
             );
@@ -221,7 +226,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 fontSize={"16px"} fontWeight={650} maxW={"100%"} textAlign={"left"}
                 transitionDuration={"0.15s"} transitionTimingFunction={"ease-in-out"}
                 >
-                    {message.text}{" "}
+                    {message.text.split('\n').map((line, i) => <Fragment key={i}>{line}<br/></Fragment>)}
                 </Text>
               </Box>
             );
