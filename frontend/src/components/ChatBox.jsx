@@ -10,6 +10,9 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
   const [loading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState([]);
   const containerRef = useRef();
+  const [radioValue, setRadioValue] = useState("KMP");
+  const [text, setText] = useState("");
+
   const fetchMesagges = async () => {
     setIsLoading(true);
     try {
@@ -17,7 +20,6 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         `http://localhost:5000/chat-sessions/${selectedId}/messages`
       );
       const data = await response.json();
-      data.sort((a,b) =>a.createdDate - b.createdDate)
       setMessages(data);
       setIsLoading(false);
     } catch (error) {
@@ -25,8 +27,6 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
       setIsLoading(false);
     }
   };
-  const [text, setText] = useState("");
-  const [radioValue, setRadioValue] = useState("KMP");
 
   useEffect(() => {
     fetchMesagges();
@@ -41,7 +41,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
 
 
   if (loading) {
-    return <div className="loading">Chatbox....</div>;
+    return ;
   }
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -57,6 +57,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
             },
             body: JSON.stringify({
               text: text,
+              patternType : radioValue,
             }),
           }
         ).then((response) => response.json());
@@ -85,6 +86,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
             },
             body: JSON.stringify({
               text: text,
+              patternType : radioValue,
             }),
           }).then((response) => response.json());
           fetchSessions();
@@ -234,7 +236,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         })}
       </Container>
 
-        <form onSubmit={handleSubmit} style={{width: "100%"}}>
+        <form onSubmit={handleSubmit} style={{width: "100%",marginBottom:0}}>
             <Box bg={"#BFC8CF"} w={"100%"} display={"flex"} flexDirection={"row"} 
             justifyContent={"center"} alignItems={"center"} py={5}>
 

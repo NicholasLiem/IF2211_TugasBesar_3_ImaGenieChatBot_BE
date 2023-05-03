@@ -17,7 +17,7 @@ const Siderbar = ({
   };
 
   if (isLoading) {
-    return <div className="loading">Sidebar...</div>;
+    return;
   }
 
   const style = {fontSize: "24px" };

@@ -53,10 +53,10 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
     fetchData();
   }, [id, setSelectedId]);
   if (isLoading) {
-    return <div className="loading">Session...</div>;
+    return;
   }
   if (isError) {
-    return <div/>; //<div className="error">Error...</div>;
+    return ; //<div className="error">Error...</div>;
   }
   return (
     <Container
@@ -66,7 +66,7 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
       display={"flex"}
       flexDirection={"row"}
       p={0}
-      pl={selectedId === id? 10: 5}
+      pl={5}
       py={5}
       w={"90%"}
       borderWidth={"2px"}

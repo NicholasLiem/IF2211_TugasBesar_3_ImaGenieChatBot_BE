@@ -18,7 +18,7 @@ function App() {
     try {
       const response = await fetch("http://localhost:5000/chat-sessions");
       const data = await response.json();
-      setSessions(data);
+      setSessions(data.reverse());
       setIsLoading(false);
       setIsError(false);
     } catch (error) {
