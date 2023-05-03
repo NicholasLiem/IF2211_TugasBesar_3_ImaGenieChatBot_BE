@@ -61,13 +61,14 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
   return (
     <Container
       color={"white"}
-      alignItems={"center"}
-      alignContent={"center"}
+      alignItems={"flex-start"}
+      alignContent={"flex-start"}
       display={"flex"}
       flexDirection={"row"}
       p={0}
       pl={selectedId === id? 10: 5}
       py={5}
+      w={"90%"}
       borderWidth={"2px"}
       borderColor={Palette.dark}
       _hover={{ borderColor:Palette.white, borderRadius: "md" }}
@@ -78,7 +79,7 @@ const Session = ({ selectedId, id, setSelectedId, fetchSessions }) => {
       position={"relative"}
     >
       <BsChatLeft style={style} />
-      <Text  ml={2} overflowX={"hidden"}>{getTitle() ? getTitle() : "New chat"}</Text>
+      <Text  ml={2} >{getTitle() ? getTitle() : "New chat"}</Text>
       {selectedId === id && (
         <BsTrash
           style={{ position: "absolute", right: 15, fontSize: "20px" }}
