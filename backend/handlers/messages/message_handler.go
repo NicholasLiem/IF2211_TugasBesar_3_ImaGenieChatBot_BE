@@ -102,7 +102,7 @@ func isQAQuery(text string) bool {
 }
 
 func isMathQuery(text string) bool {
-	r := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)[\s]+.+[0-9+\-*/().\s]+[\s]*$`)
+	r := regexp.MustCompile(`^[\s]*(hitunglah|berapakah)[\s]+[0-9+\-*/().\s]+[\s]*$`)
 	return r.MatchString(text)
 }
 
