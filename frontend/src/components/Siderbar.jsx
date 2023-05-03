@@ -62,7 +62,7 @@ const Siderbar = ({
         flexDirection={"column"}
         px={0}
         py={5}
-        overflowY={"scroll"}
+        overflowY={"auto"}
         sx={{
           "::-webkit-scrollbar": {
             width: "5px",

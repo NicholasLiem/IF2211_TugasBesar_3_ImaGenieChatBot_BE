@@ -134,6 +134,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
         overflowY={"scroll"}
         sx={{ 
           "::-webkit-scrollbar": {
+            display:"none",
             width: "5px",
           },
           "::-webkit-scrollbar-track": {
@@ -157,8 +158,8 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 maxW="55%"
                 alignSelf={"flex-end"}
                 alignItems={"flex-end"}
-                py={10}
-                px={10}
+                py={5}
+                px={5}
                 gap={3}
                 tabIndex={index + 1}
               >
@@ -197,13 +198,12 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 maxW="55%"
                 alignSelf={"flex-start"}
                 alignItems={"flex-start"}
-                py={10}
-                px={10}
+                py={5}
+                px={5}
                 gap={3}
                 tabIndex={index + 1}
                 __focus={{
-                    borderWidth:"0px",
-                    borderColor:"transparent"
+                    outline : "none", 
                 }}
               >
                 <Box 
@@ -266,7 +266,8 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
 
                 _focus={{
                     borderColor:"#FFFFFF",
-                    borderWidth: "0"
+                    borderWidth: "0",
+                    outline: "none"
                 }}
                 />
                 <Button 
