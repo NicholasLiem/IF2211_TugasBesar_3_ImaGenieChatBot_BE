@@ -82,9 +82,6 @@ func MessageHandler(c *fiber.Ctx) error {
 	} else {
 		// Kalo misalnya kalimat terdiri dari 1 kalimat saja.
 		responseMessage.Text, err = ResponseText(message.Text, message.PatternType)
-		if err != nil {
-			responseMessage.Text = "Invalid query request, bad query syntax!"
-		}
 	}
 
 	// Insert bot message
@@ -124,11 +121,12 @@ func isRandomPickQuery(text string) bool {
 func ResponseText(text string, patternType string) (string, error) {
 	var response string
 	if isQAQuery(text) {
-		result, err := user_query.QuestionAnswerClassifier(text)
-		if err != nil {
-			return response, fiber.NewError(fiber.StatusBadRequest, err.Error())
-		}
+		result, _ := user_query.QuestionAnswerClassifier(text)
 		switch result {
+		case user_query.FailQAMissing:
+			response = "Question or Question cannot be nothing"
+		case user_query.FailToFindQuestion:
+			response = "Unable to find the question in database"
 		case user_query.SuccessAdd:
 			response = "Question added successfully"
 		case user_query.SuccessUpdate:
