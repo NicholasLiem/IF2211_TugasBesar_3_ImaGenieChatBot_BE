@@ -72,13 +72,12 @@ func MessageHandler(c *fiber.Ctx) error {
 				if err != nil {
 					return fiber.NewError(fiber.StatusBadRequest, "Fail to get answer response")
 				}
-				resultText = resultText + "Jawaban untuk pertanyaan No." + strconv.Itoa(count+1) + ": \n " + resultingText + " \n "
+				resultText = resultText + "Answer for Question No." + strconv.Itoa(count+1) + ": \n " + resultingText + "\n\n"
 				count++
 			}
 		}
-		if resultText == "" {
-			resultText = "Pertanyaan tidak valid"
-		}
+		// Menghilangkan \n\n dari akhir kalimat
+		resultText = strings.TrimSuffix(resultText, "\n\n")
 		responseMessage.Text = resultText
 	} else {
 		// Kalo misalnya kalimat terdiri dari 1 kalimat saja.
