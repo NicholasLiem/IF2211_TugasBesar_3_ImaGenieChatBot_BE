@@ -60,8 +60,8 @@ const Siderbar = ({
       <Container
         display={"flex"}
         flexDirection={"column"}
+        mb={8}
         px={0}
-        py={5}
         overflowY={"auto"}
         sx={{
           "::-webkit-scrollbar": {

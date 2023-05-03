@@ -134,6 +134,29 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
       p={0}
       boxShadow={"2xl"}
     >
+      { messages.length === 0 ?
+        <Box
+        minH={"75%"}
+        minW={"80%"}
+        display={"flex"}
+        flexDirection={"column"}
+        justifyContent={"center"}
+        alignItems={"center"}
+        opacity={"0.6"}
+        >
+            <Text 
+            fontSize={"5xl"}
+            fontWeight={"bold"}>
+                Empty Chat Session
+            </Text>
+            <Text
+            fontSize={"lg"}
+            fontWeight={600}>
+                Please kindly insert your question inside the chat box
+            </Text>
+        </Box>
+        :
+        
       <Container
         display={"flex"}
         // bgColor={Palette.white}
@@ -244,6 +267,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
           }
         })}
       </Container>
+      }
 
         <form onSubmit={handleSubmit} style={{width: "100%",marginBottom:0}}>
             <Box bg={"#BFC8CF"} w={"100%"} display={"flex"} flexDirection={"row"} 

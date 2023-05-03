@@ -55,7 +55,7 @@ const InstructionInfo = ({title, query, example, desc}) => {
             marginY = {10}
             minW={"70%"}
             borderRadius={15}
-            borderWidth={"3px"}
+            borderWidth={"2px"}
             borderColor={"#404040"}
             shadow={"xl"}
             transitionDuration="0.2s"
@@ -131,6 +131,12 @@ const HelpPage = () => {
             h={"100%"}
             transitionDuration={"0.5s"}
             transitionTimingFunction={"ease-in-out"}
+            onClick={() => { 
+                color === Palette.white ? setColor(Palette.dark) : setColor(Palette.white);
+                text === "?" ? setText("X") : setText("?");
+                layerPos === 0 ? setLayerPos(-3000) : setLayerPos(0);
+                boxPos === "20vw" ? setBoxPos(-3000) : setBoxPos("20vw");
+            }}
             />
 
             {/* Content */}
