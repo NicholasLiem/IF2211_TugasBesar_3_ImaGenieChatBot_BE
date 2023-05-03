@@ -44,7 +44,7 @@ docker compose up
 ```
 3. Interract with Endpoints (Look up the documentation)
 ```sh
-https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit#heading=h.rmo71eiaumdw
+https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing
 ```
 
 ## **📷 Implementation Screenshots**
