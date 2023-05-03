@@ -112,7 +112,7 @@ func isMathQuery(text string) bool {
 //}
 
 func isDateQuery(text string) bool {
-	r := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/\d{4})\?[\s]*$`)
+	r := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/[\d]+)[\?]*[\s]*$`)
 	return r.MatchString(text)
 }
 
@@ -157,7 +157,7 @@ func ResponseText(text string, patternType string) (string, error) {
 		}
 	} else if isDateQuery(text) {
 		d := &date.Date{}
-		dateRegex := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/\d{4})\?[\s]*$`)
+		dateRegex := regexp.MustCompile(`^[\s]*hari[\s]+apakah[\s]+tanggal[\s]+(\d{1,2}\/\d{1,2}\/[\d]+)[\?]*[\s]*$`)
 		match := dateRegex.FindStringSubmatch(text)
 		dateString := match[1]
 		d.GetDayFromDate(dateString)
