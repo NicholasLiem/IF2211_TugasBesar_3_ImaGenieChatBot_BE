@@ -1,5 +1,5 @@
 import React, { useRef, Fragment } from "react";
-import { Container, Input, Text, Button, Stack, Radio, RadioGroup, Box, Image, InputGroup} from "@chakra-ui/react";
+import { Container, Input, Text, Button, Stack, Radio, RadioGroup, Box, Image, Textarea} from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { IoIosPaperPlane } from "react-icons/io";
 import {CgProfile} from "react-icons/cg"
@@ -44,6 +44,14 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
   if (loading) {
     return ;
   }
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault(); // Prevents submitting the form
+      handleSubmit(event);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
@@ -239,9 +247,9 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
 
         <form onSubmit={handleSubmit} style={{width: "100%",marginBottom:0}}>
             <Box bg={"#BFC8CF"} w={"100%"} display={"flex"} flexDirection={"row"} 
-            justifyContent={"center"} alignItems={"center"} py={5}>
+            justifyContent={"center"} alignItems={"center"} py={5} gap={5}>
 
-                <RadioGroup marginRight={10} value={radioValue} justifySelf={"flex-start"}
+                <RadioGroup marginRight={5} value={radioValue} justifySelf={"flex-start"}
                 borderWidth={"2px"} p={4} borderRadius={"xl"} bgColor={"#525260"} colorScheme="white"
                 onChange={() => {radioValue === "KMP" ? setRadioValue("BM") : setRadioValue("KMP")}} >
                     <Stack direction={"row"} gap={3}>
@@ -250,28 +258,42 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                     </Stack>
                 </RadioGroup>
                 
-                <Input
-
+                <Textarea
                 placeholder="Type your questions here..."
                 m={0}
                 w="60%"
-                maxH={"100%"}
-                py={6}
+                fontWeight={600}
+                maxHeight={"200px"}
+                height={"24px"}
+                resize={"none"}
+                autoSize={{ minRows: 1, maxRows: 2}}
+                py={3}
                 bgColor={"rgb(64,65,79)"}
                 borderColor={"#FFFFFF"}
                 borderWidth={"2.5px"}
-                borderLeftRadius={"3xl"}
-                borderRightRadius={0}
-                borderRightWidth={"0.5px"}
+                borderRadius={"3xl"}
                 color="white"
+                overflowY="hidden"
+                sx={{ 
+                    "::-webkit-scrollbar": {
+                      width: "5px",
+                    },
+                    "::-webkit-scrollbar-track": {
+                      background: "rgb(68,70,84)",
+                    },
+                    "::-webkit-scrollbar-thumb": {
+                      background: "rgba(217,217,227,.8)",
+                    },
+                  }}
                 value={text}
-                onChange={(e) => setText(e.target.value)}
-
+                onKeyDown={handleKeyDown}
+                onChange={(e) => {setText(e.target.value)}}
                 _focus={{
                     borderColor:"#FFFFFF",
                     borderWidth: "0",
                     outline: "none"
                 }}
+                id="textarea"
                 />
                 <Button 
                 display={"flex"}
@@ -281,9 +303,7 @@ const ChatBox = ({ selectedId, setSelectedId, fetchSessions}) => {
                 py={6}
                 borderColor={"#FFFFFF"}
                 borderWidth={"2.5px"}
-                borderLeftRadius={0}
-                borderRightRadius={"3xl"}
-                borderLeftWidth={0}
+                borderRadius={"2xl"}
                 bgColor={"rgb(64,65,79)"}
                 pl={3}
                 pr={4}
