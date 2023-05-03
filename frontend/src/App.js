@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="App">
-      {/* <SplashScreen /> */}
+      <SplashScreen />
       <HelpPage />
       <Container
         bgColor={Palette.lightGray}
