@@ -98,6 +98,7 @@ const HelpPage = () => {
                 position={"absolute"}
                 top={"8"}
                 right={"8"}
+                cursor={"pointer"}
                 color={color}
                 bgColor={"transparent"}
                 borderColor={color}
