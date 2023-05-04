@@ -14,7 +14,9 @@ function App() {
       const response = await fetch("http://localhost:5000/chat-sessions");
       const data = await response.json();
       setSessions(data.reverse());
-    } catch (error) {}
+    } catch (error) {
+      setSessions([])
+    }
   };
   useEffect(()=>{
     fetchSessions()
