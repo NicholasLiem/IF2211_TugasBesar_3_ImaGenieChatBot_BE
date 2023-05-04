@@ -142,9 +142,14 @@ func (c *Calculator) Calculate() {
 		} else if (IsExtra(char)){
 			if (char == rune('.')){
 				if (c.lastIsNum){
-					c.commaVal = 1
-					c.lastIsNum = false
-					c.lastIsCP = false
+					if (c.commaVal > 0){
+						c.SetInvalid("Invalid input, number with more than one comma detected.")
+						break
+					} else {
+						c.commaVal = 1
+						c.lastIsNum = false
+						c.lastIsCP = false
+					}
 				} else {
 					c.SetInvalid("Invalid input, non-number before comma detected.")
 					break
@@ -278,8 +283,13 @@ func (c *Calculator) Calculate() {
 						int1 := c.nDeque.DeleteFirst()
 						int2 := c.nDeque.DeleteFirst()
 						op := c.oDeque.DeleteFirst()
-						res, _ := Operate(int1, op, int2)
-						c.nDeque.InsertFirst(res)
+						res, valid := Operate(int1, op, int2)
+						if (!valid) {
+							c.SetInvalid("Invalid input, division by 0 detected.")
+							break
+						} else {
+							c.nDeque.InsertFirst(res)
+						}
 					}
 
 				} else {
