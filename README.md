@@ -44,7 +44,7 @@ Your local server should serve at port 5000 for the backend services and port 54
 ```sh
 docker compose up
 ```
-3. Interract with Endpoints (Look up the documentation)
+3. Interract with Endpoints (Look up the [documentation](https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing))
 ```sh
 https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing
 ```
