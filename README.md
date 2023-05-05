@@ -45,17 +45,13 @@ DB_USERNAME = username
 DB_NAME = your_db_name
 DB_PASSWORD = password
 ```
-3. Change the current directory to `backend` folder
-```sh
-cd backend
-```
 
-4. Compose your docker containers </br>
+3. Compose your docker containers </br>
 Your local server should serve at port 5000 for the backend services and port 5432 for the Postgres database <br>
 ```sh
 docker compose up
 ```
-5. Interract with Endpoints (Look up the [documentation](https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing))
+4. Interract with Endpoints (Look up the [documentation](https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing))
 ```sh
 https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing
 ```
