@@ -95,7 +95,7 @@ const SplashScreen  = () =>{
                     transitionDuration :"0.3s",
                     transitionTimingFunction:"ease-in-out",
                 }}> 
-                    The gateway to cast all your problems away.
+                    The gateway to cast all your problems away
                 </Text>
             </Box>
 
