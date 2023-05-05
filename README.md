@@ -8,7 +8,7 @@
 ## **📜 Table of Contents**
 * [Program Description](#-program-description)
 * [Required Program](#%EF%B8%8F-required-program)
-* [How to Run The Program](#-how-to-run-the-program-local)
+* [How to Run The Program](#-how-to-run-the-program-locally)
 * [Progress Report](#-progress-report)
 * [Folders and Files Description](#-folders-and-files-description)
 * [Author](#-authors)
@@ -29,28 +29,33 @@ In this assignment, the program is required to develop a simple ChatGPT applicat
 |           | Chakra UI        | [ChakraUI](https://chakra-ui.com/)        |
 
 
-## **💻 How to Run The Program (Local)**
+## **💻 How to Run The Program (Locally)**
 
 
 ### **Backend**
-1. Make .env file with this criteria
+1. Change the current directory to `backend` folder
+```sh
+cd backend
+```
+
+2. Make .env file with this criteria
 ```sh
 DB_HOST = db
 DB_USERNAME = username
 DB_NAME = your_db_name
 DB_PASSWORD = password
 ```
-2. Change the current directory to `backend` folder
+3. Change the current directory to `backend` folder
 ```sh
 cd backend
 ```
 
-3. Compose your docker containers </br>
+4. Compose your docker containers </br>
 Your local server should serve at port 5000 for the backend services and port 5432 for the Postgres database <br>
 ```sh
 docker compose up
 ```
-4. Interract with Endpoints (Look up the [documentation](https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing))
+5. Interract with Endpoints (Look up the [documentation](https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing))
 ```sh
 https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing
 ```
