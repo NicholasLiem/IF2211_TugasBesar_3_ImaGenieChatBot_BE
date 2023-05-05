@@ -12,7 +12,7 @@
 * [Progress Report](#-progress-report)
 * [Folders and Files Description](#-folders-and-files-description)
 * [Author](#-authors)
-* [Extra](#-extra)
+* [Extra](#extra)
 
 ## **📄 Program Description**
 In this assignment, the program is required to develop a simple ChatGPT application by applying the simplest QA approach. The search for the most similar question to the question given by the user is done using the Knuth-Morris-Pratt (KMP) and Boyer-Moore (BM) string matching algorithms. Regex is used to determine the format of the question. If there is no exact match between the user's question and the questions in the database through the KMP or BM algorithms, then the chatbot will use the most similar question with at least 90% similarity. If there is no question with a similarity above 90%, then the chatbot will provide a maximum of 3 options for the most similar questions to be selected by the user. The similarity calculation is calculated using Levenshtein Distance. This application should also have several features such as text questions, calculator, date feature, add question and answer to the database, and delete question from the database. The classification is done using regex and is classified like everyday language.
@@ -31,6 +31,7 @@ In this assignment, the program is required to develop a simple ChatGPT applicat
 
 ## **💻 How to Run The Program (Local)**
 
+
 ### **Backend**
 1. Make .env file with this criteria
 ```sh
@@ -39,12 +40,17 @@ DB_USERNAME = username
 DB_NAME = your_db_name
 DB_PASSWORD = password
 ```
-2. Compose your docker containers </br>
+2. Change the current directory to `backend` folder
+```sh
+cd backend
+```
+
+3. Compose your docker containers </br>
 Your local server should serve at port 5000 for the backend services and port 5432 for the Postgres database <br>
 ```sh
 docker compose up
 ```
-3. Interract with Endpoints (Look up the [documentation](https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing))
+4. Interract with Endpoints (Look up the [documentation](https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing))
 ```sh
 https://docs.google.com/document/d/1_3Z_u122nycifeYYGF1Ud6ceMrI4KzqmiWVB5Tq0-vA/edit?usp=sharing
 ```
@@ -61,7 +67,7 @@ npm install
 ```
 
 3. Start the program </br>
-The program should be automatically opened in a new browser tab. However, in case it does not, the program will be started on ccccc`localhost:3000`
+The program should be automatically opened in a new browser tab. However, in case it does not, you can access the running program  on `localhost:3000`
 ```sh
 npm start
 ```
